@@ -20,14 +20,20 @@ public class p031 {
         int biggestInd = last;
         int begin = last - 1;
         while (begin >= 0) {
-            if (nums[begin] > nums[biggestInd]) biggestInd = begin;
+            System.out.println("nums[" + begin + "] = " + nums[begin] + ", nums[" + biggestInd + "] = " + nums[biggestInd]);
+
+            if (nums[begin] >= nums[biggestInd]) biggestInd = begin;
             else
                 break;
             begin--;
         }
         if (begin >= 0) {
             for (last = smallestInd; last >= biggestInd; last--) {
-                if (nums[last] > nums[begin]) swap(nums, begin, last);
+                System.out.println("last = " + last + ", begin = " + begin);
+                if (nums[last] > nums[begin]) {
+                    swap(nums, begin, last);
+                    break;
+                }
             }
             begin++;
             last = nums.length - 1;
@@ -46,7 +52,7 @@ public class p031 {
 
     public static void main(String[] args) {
         p031 sol = new p031();
-        int[] arr = new int[]{1,2,3};
+        int[] arr = new int[]{5,1,1};
         sol.nextPermutation(arr);
         for (int i : arr) System.out.println(i);
     }
