@@ -26,33 +26,30 @@ public class p060 {
         String res = "";
         for (int i = 1; i <= n; i++) {
             factSeq[i] = factSeq[i-1] * i;
-            res += Integer.toString(i);
+            res += i;
         }
         if (k > factSeq[n]) return null;
-        List<Integer> seq = new ArrayList<>();
-        int ind = n-1;
-        while (k > 0) {
-            int result = (k - 1) / factSeq[ind];
-            seq.add(result);
+        k = k - 1;
+        for(int ind = n-1; ind > 0; ind--) {
+            int r = k / factSeq[ind];
+            // System.out.println("k = " + k + ", factSeq[" + ind + "] = " + factSeq[ind] + ", result = " + result);
+//            System.out.print(r + ",");
             k = k % factSeq[ind];
-            ind--;
-        }
+            if (r == 0) continue;
+            int pos = n-1-ind;
 
-        for (int i = 0; i < seq.size(); i++) {
-            System.out.println("seq.get(" + i + ") = " + seq.get(i));
-            if (seq.get(i) == 0) break;
-            char c1 = res.charAt(seq.get(i));
-            String sub1 = res.substring(i,seq.get(i));
-            String sub2 = res.substring(seq.get(i)+1);
-            res = c1 + sub1 + sub2;
+            StringBuilder sb = new StringBuilder(res);
+            char c = sb.charAt(r+pos);
+            sb.deleteCharAt(r+pos);
+            sb.insert(pos, c);
+            res = sb.toString();
         }
-        for (int i : seq) System.out.println(i + ",");
-        System.out.println(res);
-        return "";
+//        return "";
+        return res;
     }
 
     public static void main(String[] args) {
         p060 sol = new p060();
-        sol.getPermutation(3,5);
+        System.out.println(sol.getPermutation(8,8590));
     }
 }
