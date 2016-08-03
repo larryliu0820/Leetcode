@@ -42,10 +42,9 @@ public class p060 {
             System.out.println("seq.get(" + i + ") = " + seq.get(i));
             if (seq.get(i) == 0) break;
             char c1 = res.charAt(seq.get(i));
-            char c2 = res.charAt(i);
-            String sub1 = res.substring(i+1,seq.get(i));
+            String sub1 = res.substring(i,seq.get(i));
             String sub2 = res.substring(seq.get(i)+1);
-            res = c1 + sub1 + c2 + sub2;
+            res = c1 + sub1 + sub2;
         }
         for (int i : seq) System.out.println(i + ",");
         System.out.println(res);
