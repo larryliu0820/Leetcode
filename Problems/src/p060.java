@@ -23,10 +23,10 @@ public class p060 {
     public String getPermutation(int n, int k) {
         int[] factSeq = new int[n+1];
         factSeq[0] = 1;
-        String res = "";
+        List<Integer> res = new ArrayList<>();
         for (int i = 1; i <= n; i++) {
             factSeq[i] = factSeq[i-1] * i;
-            res += i;
+            res.add(i);
         }
         if (k > factSeq[n]) return null;
         k = k - 1;
@@ -38,14 +38,13 @@ public class p060 {
             if (r == 0) continue;
             int pos = n-1-ind;
 
-            StringBuilder sb = new StringBuilder(res);
-            char c = sb.charAt(r+pos);
-            sb.deleteCharAt(r+pos);
-            sb.insert(pos, c);
-            res = sb.toString();
+            int c = res.remove(r+pos) ;
+            res.add(pos, c);
         }
 //        return "";
-        return res;
+        String result = "";
+        for (int i : res) result += i;
+        return result;
     }
 
     public static void main(String[] args) {
