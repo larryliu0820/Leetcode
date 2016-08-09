@@ -22,73 +22,54 @@ import java.util.List;
  */
 public class p130 {
     public void solve(char[][] board) {
-        if (board == null || board.length == 0) return;
-        boolean[][] visited = new boolean[board.length][board[0].length];
-
-        for (int i = 0; i < board.length; i++) {
+        if (board == null || board.length < 3 || board[0].length < 3) return;
+        int[] rows = new int[]{0, board.length - 1};
+        int[] cols = new int[]{0, board[0].length - 1};
+        for (int i : rows) {
             for (int j = 0; j < board[0].length; j++) {
-                if (board[i][j] == 'O' && !visited[i][j]) {
-                    List<List<Integer>> neighbors = new ArrayList<>();
-                    List<Integer> root = new ArrayList<>();
-                    root.add(i);
-                    root.add(j);
-                    neighbors.add(root);
-                    bfs(board, visited, neighbors);
+                if (board[i][j] == 'O') {
+                    dfs(board, i, j);
                 }
             }
         }
+
+        for (int i = 1; i < board.length - 1; i++) {
+            for (int j: cols) {
+                if (board[i][j] == 'O') {
+                    dfs(board, i, j);
+                }
+            }
+        }
+
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if(board[i][j]=='1') board[i][j] = 'O';
+                else if(board[i][j]=='O') board[i][j] = 'X';
+            }
+        }
+
     }
 
-    public boolean dfs(char[][] board, boolean[][] visited, int[] index) {
-        int row = index[0];
-        int col = index[1];
-        if (visited[row][col]) return true;
-        visited[row][col] = true;
+
+    public void dfs(char[][] board, int row, int col) {
+        board[row][col] = '1';
         // up
-
-        if (row == 0 || row == board.length - 1) return false;
-        if (col == 0 || col == board[0].length - 1) return false;
-        if (board[row-1][col] == 'O' ) {
-
-            index[0]--;
-            if (!dfs(board, visited, index)) return false;
-            index[0]++;
-        }
-
+        if (row > 0 && board[row-1][col] == 'O' ) dfs(board,  row-1, col);
         // left
-
-        if (board[row][col-1] == 'O') {
-            index[1]--;
-            if (!dfs(board, visited, index)) return false;
-            index[1]++;
-        }
-
+        if (col > 0 && board[row][col-1] == 'O') dfs(board,  row, col-1);
         // down
-
-        if (board[row+1][col] == 'O') {
-            index[0]++;
-            if (!dfs(board, visited, index)) return false;
-            index[0]--;
-        }
-
+        if (row < board.length - 1 && board[row+1][col] == 'O') dfs(board,  row+1, col);
         // right
+        if (col < board[0].length - 1 && board[row][col+1] == 'O') dfs(board,  row, col+1);
 
-        if (board[row][col+1] == 'O') {
-            index[1]++;
-            if (!dfs(board, visited, index)) return false;
-            index[1]--;
-        }
-
-        board[row][col] = 'X';
-        return true;
     }
 
-    public void bfs(char[][] board, boolean[][] visited, List<List<Integer>> neighbors) {
+    public void bfs(char[][] board, boolean[][] visited, List<int[]> neighbors) {
         boolean isClosed = true;
         int curr = 0;
         while (curr < neighbors.size()) {
-            int row = neighbors.get(curr).get(0);
-            int col = neighbors.get(curr).get(1);
+            int row = neighbors.get(curr)[0];
+            int col = neighbors.get(curr)[1];
             visited[row][col] = true;
 
             if (row == 0 || row == board.length - 1 || col == 0 || col == board[0].length - 1) {
@@ -97,22 +78,16 @@ public class p130 {
             // up
             if (row > 0 && board[row-1][col] == 'O') {
 
-                if (visited[row-1][col]) isClosed = false;
-                else {
-                    List<Integer> up = new ArrayList<>();
-                    up.add(row - 1);
-                    up.add(col);
+                if (!visited[row-1][col]) {
+                    int[] up = new int[]{row - 1, col};
                     neighbors.add(up);
                 }
             }
 
             // left
             if (col > 0 && board[row][col-1] == 'O') {
-                if (visited[row][col-1]) isClosed = false;
-                else {
-                    List<Integer> left = new ArrayList<>();
-                    left.add(row);
-                    left.add(col - 1);
+                if (!visited[row][col-1]) {
+                    int[] left = new int[]{row, col-1};
                     neighbors.add(left);
                 }
 
@@ -120,11 +95,8 @@ public class p130 {
 
             // down
             if ( row < board.length - 1 && board[row+1][col] == 'O') {
-                if (visited[row+1][col]) isClosed = false;
-                else {
-                    List<Integer> down = new ArrayList<>();
-                    down.add(row + 1);
-                    down.add(col);
+                if (!visited[row+1][col]) {
+                    int[] down = new int[]{row + 1,col};
                     neighbors.add(down);
                 }
 
@@ -132,11 +104,8 @@ public class p130 {
 
             // right
             if ( col < board[0].length - 1 && board[row][col+1] == 'O') {
-                if (visited[row][col+1] ) isClosed = false;
-                else {
-                    List<Integer> right = new ArrayList<>();
-                    right.add(row);
-                    right.add(col + 1);
+                if (!visited[row][col+1]) {
+                    int[] right = new int[]{row, col + 1};
                     neighbors.add(right);
                 }
 
@@ -144,23 +113,28 @@ public class p130 {
             curr++;
         }
         if (isClosed) {
-            for (List<Integer> ind : neighbors) {
-                board[ind.get(0)][ind.get(1)] = 'X';
+            for (int[] ind : neighbors) {
+                board[ind[0]][ind[1]] = 'X';
             }
         }
     }
+
     public static void main(String[] args) {
         p130 sol = new p130();
-        char[][] board = new char[9][];
-        board[0] = "OXOOOOOOO".toCharArray();
-        board[1] = "OOOXOOOOX".toCharArray();
-        board[2] = "OXOXOOOOX".toCharArray();
-        board[3] = "OOOOXOOOO".toCharArray();
-        board[4] = "XOOOOOOOX".toCharArray();
-        board[5] = "XXOOXOXOX".toCharArray();
-        board[6] = "OOOXOOOOO".toCharArray();
-        board[7] = "OOOXOOOOO".toCharArray();
-        board[8] = "OOOOOXXOO".toCharArray();
+
+        String[] input = new String[]{"XOOOOOOOOOOOOOOOOOOO","OXOOOOXOOOOOOOOOOOXX","OOOOOOOOXOOOOOOOOOOX","OOXOOOOOOOOOOOOOOOXO","OOOOOXOOOOXOOOOOXOOX","XOOOXOOOOOXOXOXOXOXO","OOOOXOOXOOOOOXOOXOOO","XOOOXXXOXOOOOXXOXOOO","OOOOOXXXXOOOOXOOXOOO","XOOOOXOOOOOOXXOOXOOX","OOOOOOOOOOXOOXOOOXOX","OOOOXOXOOXXOOOOOXOOO","XXOOOOOXOOOOOOOOOOOO","OXOXOOOXOXOOOXOXOXOO","OOXOOOOOOOXOOOOOXOXO","XXOOOOOOOOXOXXOOOXOO","OOXOOOOOOOXOOXOXOXOO","OOOXOOOOOXXXOOXOOOXO","OOOOOOOOOOOOOOOOOOOO","XOOOOXOOOXXOOXOXOXOO"};
+        char[][] board = new char[input.length][];
+        for (int i = 0; i < input.length; i ++) {
+            board[i] = input[i].toCharArray();
+        }
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                System.out.print(board[i][j] + " ");
+            }
+            System.out.print("\n");
+        }
+        System.out.print("\n");
+
         sol.solve(board);
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
