@@ -1,3 +1,5 @@
+import java.util.Stack;
+
 /**
  * Created by mengwliu on 8/9/16.
  * 150. Evaluate Reverse Polish Notation
@@ -14,40 +16,45 @@
 public class p150 {
     public int evalRPN(String[] tokens) {
         String operators = "+-*/";
-        return 0;
-    }
+        Stack<String> stack = new Stack<>();
 
-    public int evalRPNHelper(String[] tokens, int begin, int end) {
-        String operators = "+-*/";
-        String operator = tokens[end];
-        if (operators.contains(tokens[end - 1]))
-            return 0;
-        return 0;
-    }
-
-    public String[] computeOnce(String[] tokens, int begin, int end) {
-        int op1 = Integer.parseInt(tokens[begin]);
-        int op2 = Integer.parseInt(tokens[begin+1]);
-        int result = 0;
-        switch (tokens[end]) {
-            case "+":
-                result = op1 + op2;
-                break;
-            case "-":
-                result = op1 - op2;
-                break;
-            case "*":
-                result = op1 * op2;
-                break;
-            default:
-                result = op1 / op2;
+        for (int i = tokens.length - 1; i >= 0; i --) {
+            if (operators.contains(tokens[i])) {
+                stack.push(tokens[i]);
+            } else {
+                String op1 = tokens[i];
+                while (!stack.isEmpty() && !operators.contains(stack.peek())) {
+                    String op2 = stack.pop();
+                    String operator = stack.pop();
+                    op1 = computeOnce(op1, op2, operator);
+                }
+                stack.push(op1);
+            }
         }
-        System.out.println("op1 = " + op1 + ", op2 = " + op2 + ", result = " + result);
-        String[] newTokens = new String[tokens.length - 2];
-        for (int i = 0; i < begin; i ++) newTokens[i] = tokens[i];
-        newTokens[begin] = Integer.toString(result);
-        for (int i = end+1; i < tokens.length; i++) newTokens[i-2] = tokens[i];
-        return newTokens;
+        return Integer.parseInt(stack.pop());
+    }
+
+
+    public String computeOnce(String op1, String op2, String operator) {
+        System.out.println("op1 = " + op1 + ", op2 = " + op2 + ", operator = " + operator);
+        int opInt1 = Integer.parseInt(op1);
+        int opInt2 = Integer.parseInt(op2);
+        switch (operator) {
+            case "+":
+                return Integer.toString(opInt1 + opInt2);
+            case "-":
+                return Integer.toString(opInt1 - opInt2);
+            case "*":
+                return Integer.toString(opInt1 * opInt2);
+            default:
+                return Integer.toString(opInt1 / opInt2);
+        }
+
+//        String[] newTokens = new String[tokens.length - 2];
+//        for (int i = 0; i < begin; i ++) newTokens[i] = tokens[i];
+//        newTokens[begin] = Integer.toString(result);
+//        for (int i = end+1; i < tokens.length; i++) newTokens[i-2] = tokens[i];
+//        return newTokens;
     }
 
     public static void main(String[] args) {
