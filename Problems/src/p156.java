@@ -15,18 +15,27 @@
      4
     / \
    5   2
-  / \
- 3   1
+      / \
+     3   1
  */
 public class p156 {
     public TreeNode upsideDownBinaryTree(TreeNode root) {
-        if (root.left.left == null) {
-            TreeNode prevLeft = root.left;
+        if (root == null) return null;
+        TreeNode newRoot = root;
+        while(newRoot.left != null) newRoot = newRoot.left;
+        helper(root);
+        return newRoot;
+    }
 
-
-        }
-
-        upsideDownBinaryTree(root.left);
+    public TreeNode helper(TreeNode root) {
+        if (root.left == null) return root;
+        TreeNode oldLeft = root.left;
+        TreeNode oldRight = root.right;
+        root.left = null;
+        root.right = null;
+        TreeNode leftMost = helper(oldLeft);
+        leftMost.left = oldRight;
+        leftMost.right = root;
         return root;
     }
 }
