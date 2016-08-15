@@ -17,32 +17,37 @@ import java.util.Map;
  */
 public class p166 {
     public String fractionToDecimal(int numerator, int denominator) {
+        if (numerator == 0) return "0";
         if (numerator == Integer.MIN_VALUE && denominator == -1)
             return Integer.toString(numerator).substring(1);
         boolean isNeg = numerator < 0 ^ denominator < 0;
-        double n = Math.abs(numerator);
-        double d = Math.abs(denominator);
-
-        String result = (Integer.toString(numerator/denominator) == "0" && isNeg) ? "-0":Integer.toString(numerator/denominator);
-        int residual = numerator % denominator;
-        if (residual == 0) return (isNeg?"-":"")+result;
+        long n = Math.abs((long)numerator);
+        long d = Math.abs((long)denominator);
+        String result = (numerator/denominator == 0 && isNeg) ? "-0":Integer.toString(numerator/denominator);
+        long residual = n % d;
+        if (residual == 0) return result;
         String repeat = "";
-        Map<Integer,Integer> residualIndex = new HashMap<>();
+        Map<Long,Integer> residualIndex = new HashMap<>();
         int index = 0;
         residualIndex.put(residual, index);
         do {
             residual *= 10;
-            repeat += residual / denominator;
-            residual %= denominator;
+            repeat += residual / d;
+            residual %= d;
             index++;
             if (residualIndex.containsKey(residual)) break;
             else residualIndex.put(residual, index);
         } while ( residual != 0);
-        if (residual == 0) return (isNeg?"-":"")+result+"."+repeat;
+        if (residual == 0) return result+"."+repeat;
         else {
             int ind = residualIndex.get(residual);
             repeat = repeat.substring(0, ind) + "(" + repeat.substring(ind) + ")";
-            return (isNeg?"-":"")+result+"."+repeat;
+            return result+"."+repeat;
         }
+    }
+
+    public static void main(String[] args) {
+        p166 sol = new p166();
+        System.out.println(sol.fractionToDecimal(1, Integer.MIN_VALUE));
     }
 }
