@@ -21,25 +21,19 @@ public class p056 {
         }
     };
     public List<Interval> merge(List<Interval> intervals) {
-        intervals.sort(IntervalStartComparator);
         List<Interval> result = new ArrayList<>();
-        int next = 1;
-        Interval curr = intervals.get(0);
-        while ( next < intervals.size()) {
-            while (curr.end > intervals.get(next).end) {
-                next ++;
-            }
-            Interval merged = new Interval();
-            merged.start = curr.start;
-            if (curr.end >= intervals.get(next).start) {
-                merged.end = intervals.get(next).end;
-                curr = merged;
+        if (intervals == null || intervals.isEmpty()) return result;
+        intervals.sort(IntervalStartComparator);
+        result.add(new Interval(intervals.get(0).start, intervals.get(0).end));
+        Interval curr = result.get(0);
+        for (int i = 1; i < intervals.size(); i++) {
+            while (curr.end > intervals.get(i).end) if (++i == intervals.size()) return result;
+            if (curr.end >= intervals.get(i).start) {
+                curr.end = intervals.get(i).end;
             } else {
-                merged.end = Math.min(intervals.get(next-1).end, curr.end);
-                curr = intervals.get(next);
+                curr = new Interval(intervals.get(i).start, intervals.get(i).end);
+                result.add(curr);
             }
-            next++;
-            result.add(merged);
         }
         return result;
     }
