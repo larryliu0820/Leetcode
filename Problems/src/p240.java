@@ -29,10 +29,6 @@ public class p240 {
 
     }
 
-
-
-
-
     public boolean searchMatrixHelper(int[][] matrix, int beginRow, int beginCol, int endRow, int endCol, int target) {
         if (beginRow >= matrix.length || beginCol >= matrix[0].length) return false;
 
