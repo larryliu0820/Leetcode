@@ -1,3 +1,7 @@
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Created by Valued Customer on 8/29/2016.
  * 294. Flip Game II
@@ -13,22 +17,33 @@
  Derive your algorithm's runtime complexity.
  */
 public class p294 {
+
     public boolean canWin(String s) {
-        boolean[] winable = new boolean[s.length()+1];
-        winable[2] = true;
-        winable[3] = true;
-        if (s.length() <= 3) return winable[s.length()];
-        for (int i = 4; i <= s.length(); i++) {
-            for (int j = 0; j < s.length() / 2; j++) {
-                // divide and conquer
-                int leftLen = j;
-                int rightLen = i - j - 1;
-                if (!winable[leftLen] ^ winable[rightLen]) {
-                    winable[i] = true;
-                    break;
+        if (s == null || s.length() < 2) {
+            return false;
+        }
+        HashMap<String, Boolean> winMap = new HashMap<>();
+        return helper(s, winMap);
+    }
+
+    public boolean helper(String s, HashMap<String, Boolean> winMap) {
+        if (winMap.containsKey(s)) {
+            return winMap.get(s);
+        }
+        for (int i = 0; i < s.length() - 1; i++) {
+            if (s.startsWith("++", i)) {
+                String t = s.substring(0, i) + "--" + s.substring(i+2);
+                if (!helper(t, winMap)) {
+                    winMap.put(s, true);
+                    return true;
                 }
             }
         }
-        return winable[s.length()];
+        winMap.put(s, false);
+        return false;
+    }
+    public static void main(String[] argv) {
+        p294 sol = new p294();
+        System.out.println(sol.canWin("+++++++++"));
     }
 }
