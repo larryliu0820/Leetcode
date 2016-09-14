@@ -18,31 +18,24 @@
  */
 public class p309 {
     public int maxProfit(int[] prices) {
-        return maxProfitHelper(prices, 0, prices.length-1);
-    }
-
-    private int maxProfitHelper(int[] prices, int begin, int end) {
-        if (end - begin < 1) return 0;
-        int max = 0;
-
-        for (int i = begin; i < end; i++) {
-            int currMax = 0;
-            for (int j = i+1; j <= end; j++) {
-                if (prices[j] - prices[i] <= currMax) continue;
-                currMax = prices[j] - prices[i];
-                int remainMax = 0;
-                if (j+2 != end) {
-                    remainMax = maxProfitHelper(prices, j+2, end);
-                }
-                max = Math.max(max, currMax + remainMax);
+        if (prices == null || prices.length == 0) return 0;
+        int[] memo = new int[prices.length];
+        memo[0] = 0;
+        for (int i = 1; i < prices.length; i++) {
+            for (int j = 0; j < i; j++) {
+                int diff = prices[i] - prices[j];
+                if (diff < 0) continue;
+                if (j <= 1) memo[i] = Math.max(memo[i],diff);
+                else memo[i] = Math.max(memo[i], memo[j-2] + diff);
             }
+            memo[i] = Math.max(memo[i-1], memo[i]);
         }
-        return max;
+        return memo[prices.length-1];
     }
 
     public static void main(String[] args) {
         p309 sol = new p309();
-        System.out.println(sol.maxProfit(new int[]{2,1,4,5,2,9,7}));
+        System.out.println(sol.maxProfit(new int[]{1,2,4}));
 
     }
 }
