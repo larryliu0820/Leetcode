@@ -31,8 +31,9 @@ public class p375 {
                 int j = i + diff;
                 memo[i][j] = Integer.MAX_VALUE;
                 for (int k = i; k <= j; k++) {
-                    memo[i][j] = Math.min(memo[i][j], k +
-                    Math.max(k-1>=i?memo[i][k-1]:0,j>=k+1?memo[k+1][j]:0));
+                    memo[i][j] = Math.min(memo[i][j],
+                            k + Math.max(k-1>=i?memo[i][k-1]:0,
+                                    j>=k+1?memo[k+1][j]:0));
                 }
             }
 
