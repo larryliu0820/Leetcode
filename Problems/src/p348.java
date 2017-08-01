@@ -20,6 +20,26 @@ public class p348 {
      2: Player 2 wins. */
     public int move(int row, int col, int player) {
         playground[row][col] = player;
+        for (char mode : new char[]{'-', '|', '/', '\\'}) {
+            if (check(row, col, player, mode)) return player;
+        }
         return 0;
+    }
+
+    private boolean check(int row, int col, int player, char mode) {
+        if (mode == '-') {
+            for (int i = 0; i < playground[row].length; i++)
+                if (playground[row][i] != player) return false;
+        } else if (mode == '|') {
+            for (int i = 0; i < playground.length; i++)
+                if (playground[i][col] != player) return false;
+        } else if (mode == '/' && row + col == playground.length -1) {
+            for (int i = 0; i < playground.length; i++)
+                if (playground[i][playground.length-1-i] != player) return false;
+        } else if (mode == '\\' && row == col) {
+            for (int i = 0; i < playground.length; i++)
+                if (playground[i][i] != player) return false;
+        }
+        return true;
     }
 }
