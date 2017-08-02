@@ -14,28 +14,25 @@ public class p138 {
     class RandomListNode {
         int label;
         RandomListNode next, random;
-        RandomListNode(int x) { this.label = x; }
-    }
 
+        RandomListNode(int x) {
+            this.label = x;
+        }
+    }
     public RandomListNode copyRandomList(RandomListNode head) {
         if (head == null) return null;
         Map<RandomListNode, RandomListNode> map = new HashMap<>();
-        RandomListNode iter = head;
-        map.put(head, new RandomListNode(head.label));
-        RandomListNode copyIter = map.get(head);
-        while (iter.next != null) {
-            copyIter.next = new RandomListNode(iter.next.label);
-            map.put(iter.next, copyIter.next);
-            iter = iter.next;
-            copyIter = copyIter.next;
+        RandomListNode itr = head;
+        while (itr != null) {
+            map.put(itr, new RandomListNode(itr.label));
+            itr = itr.next;
         }
-
-        iter = head;
-        while (iter != null) {
-            if (iter.random != null) {
-                map.get(iter).random = map.get(iter.random);
-            }
-            iter = iter.next;
+        itr = head;
+        while (itr != null) {
+            RandomListNode node = map.get(itr);
+            node.next = map.get(itr.next);
+            node.random = map.get(itr.random);
+            itr = itr.next;
         }
         return map.get(head);
     }
