@@ -5,10 +5,9 @@
 public class p171 {
     public int titleToNumber(String s) {
         int result = 0;
-        int idx = 0;
-        for (int i = s.length()-1; i >= 0; i--) {
-            char c = s.charAt(i);
-            result += (c - 'A' + 1) * Math.pow(26, idx++);
+        for (char c: s.toCharArray()) {
+            result *= 26;
+            result += c - 'A' + 1;
         }
         return result;
     }

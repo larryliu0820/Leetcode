@@ -28,27 +28,20 @@ public class p200 {
         if (grid == null || grid.length == 0 || grid[0].length == 0) return 0;
         int m = grid.length, n = grid[0].length;
         boolean[][] visited = new boolean[m][n];
-        Queue<int[]> queue = new LinkedList<>();
+        Queue<int[]> q = new LinkedList<>();
         int count = 0;
-        int[][] inc = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        int[][] increments = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 if (grid[i][j] == '0' || visited[i][j]) continue;
-                if (queue.isEmpty()) {
-                    visited[i][j] = true;
-                    queue.offer(new int[]{i,j});
-                }
-                while (!queue.isEmpty()) {
-                    int[] curr = queue.poll();
-                    for (int[] delta : inc) {
-                        int nrow = curr[0] + delta[0];
-                        int ncol = curr[1] + delta[1];
-                        if (isValid(m, n, nrow, ncol) &&
-                                (!visited[nrow][ncol]) &&
-                                grid[nrow][ncol] == '1') {
-                            visited[nrow][ncol] = true;
-                            queue.offer(new int[]{nrow, ncol});
-                        }
+                q.offer(new int[]{i, j});
+                while (!q.isEmpty()) {
+                    int[] coor = q.poll();
+                    int r = coor[0], c = coor[1];
+                    visited[r][c] = true;
+                    for (int[] inc : increments) {
+                        if (isValid(grid, visited, r+inc[0], c+inc[1]))
+                            q.offer(new int[]{r+inc[0], c+inc[1]});
                     }
                 }
                 count++;
@@ -56,8 +49,8 @@ public class p200 {
         }
         return count;
     }
-
-    private boolean isValid(int m, int n, int i, int j) {
-        return i >= 0 && i < m && j >= 0 && j < n;
+    private boolean isValid(char[][] grid, boolean[][] visited, int r, int c) {
+        if (r < 0 || r >= grid.length || c < 0 || c >= grid[0].length) return false;
+        return (!visited[r][c]) && grid[r][c] == '1';
     }
 }
