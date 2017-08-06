@@ -12,18 +12,15 @@
  */
 public class p026 {
     public int removeDuplicates(int[] nums) {
-        int itr = 0;
-        int diffItr = 0;
-        while(diffItr < nums.length) {
-            while(nums[itr] == nums[diffItr]) {
-                if (diffItr == nums.length - 1) return itr+1;
-                diffItr++;
+        if (nums == null) return 0;
+        if (nums.length <= 1) return nums.length;
+        int i = 0, j = 1;
+        for (;j < nums.length; j++) {
+            if (nums[i] != nums[j]) {
+                nums[++i] = nums[j];
             }
-            itr++;
-            if (itr != diffItr) nums[itr] = nums[diffItr];
-            diffItr++;
         }
-        return itr+1;
+        return i;
     }
 
     public static void main(String[] args) {

@@ -8,30 +8,34 @@ public class p273 {
         String[] tens = new String[]{"", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
         String[] digits = new String[]{"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"};
         String[] teens = new String[]{"Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
-        StringBuilder sb = new StringBuilder();
+        StringBuilder result = new StringBuilder();
         for (int i = 0; num > 0; num /= 1000, i++) {
-            String temp = "";
+            StringBuilder sb = new StringBuilder();
             int belowThousand = num % 1000;
-            int belowHundred = belowThousand;
-            int belowTen;
-            if (belowThousand >= 100) {
-                temp += " " + digits[belowThousand/100] + " Hundred" ;
-                belowHundred = belowThousand % 100;
-            }
-            if (belowHundred >= 10 && belowHundred < 20) {
-                temp += " " + teens[belowHundred % 10];
+            if (belowThousand >= 100)
+                sb.append(" ").append(digits[belowThousand/100]).append(" Hundred");
+
+            int belowHundred = belowThousand % 100;
+            if (belowHundred > 10 && belowHundred < 20) {
+                sb.append(" ").append(teens[belowHundred%10]);
             } else {
-                if (belowHundred >= 20) temp += " " + tens[belowHundred / 10];
-                belowTen = belowHundred % 10;
-                if (belowTen > 0) temp += " " + digits[belowTen];
+                if (belowHundred >= 20)
+                    sb.append(" ").append(tens[belowHundred/10]);
+                if (belowHundred % 10 >= 0)
+                    sb.append(" ").append(digits[belowHundred % 10]);
             }
 
-            if (i > 0 && belowThousand > 0) temp += " " + unit[i];
-            sb.insert(0, temp);
+
+
+            if (belowThousand > 0 && i > 0)
+                sb.append(" ").append(unit[i]);
+
+            result.insert(0, sb.toString());
         }
-        if (sb.length() == 0) return "Zero";
-        if (sb.charAt(0) == ' ') sb.deleteCharAt(0);
-        if (sb.charAt(sb.length()-1) == ' ') sb.deleteCharAt(sb.length()-1);
-        return sb.toString();
+        if (result.length() == 0)
+            result.append("Zero");
+        else if (result.charAt(0) == ' ')
+            result.deleteCharAt(0);
+        return result.toString();
     }
 }

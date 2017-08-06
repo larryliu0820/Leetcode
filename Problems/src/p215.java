@@ -17,35 +17,36 @@ import java.util.PriorityQueue;
 public class p215 {
     public int findKthLargest(int[] nums, int k) {
         return select(nums, 0, nums.length-1, k-1);
-
     }
 
-    private int select(int[] A, int left, int right, int k) {
-        if (left == right) return A[left];
-        int pivotInd = (left + right) / 2;
-        pivotInd = partition(A, left, right, pivotInd);
-        if (k == pivotInd) return A[k];
-        else if (k < pivotInd) return select(A, left, pivotInd - 1, k);
-        else return select(A, pivotInd + 1, right, k);
+    private int select(int[] nums, int i, int j, int k) {
+        int pivot = (i+j) / 2;
+        int pivotVal = nums[pivot];
+        swap(nums, pivot, j);
+        int pivotNewPos = partition(nums, i, j, pivotVal);
+        swap(nums, j, pivotNewPos);
+        if (pivotNewPos == k) return nums[pivotNewPos];
+        else if (pivotNewPos > k) return select(nums, i, pivotNewPos-1, k);
+        else return select(nums, pivotNewPos+1, j, k);
     }
 
-    private int partition(int[] A, int left, int right, int k) {
-        int pivot = A[k];
-        swap(A, k, right);
-        int i = left, j = right;
-        while (i < j) {
-            while (i < j && A[i] >= pivot) i++;
-            while (i < j && A[j] <= pivot) j--;
-            swap(A, i, j);
+    private int partition(int[] nums, int i, int j, int pivotVal) {
+        int s = i, e = j-1;
+        while (s < e) {
+            while (s < e && nums[s] >= pivotVal) s++;
+            while (s < e && nums[e] <= pivotVal) e--;
+            if (s < e) swap(nums, s, e);
         }
-        swap(A, right, i);
-        return i;
+        return nums[s] <= pivotVal?s:j;
     }
-    private void swap(int[] A, int i, int j) {
-        if (i != j) {
-            int temp = A[i];
-            A[i] = A[j];
-            A[j] = temp;
-        }
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    public static void main(String[] args) {
+        p215 sol = new p215();
+        sol.findKthLargest(new int[]{3, 1, 2, 4}, 2);
     }
 }

@@ -10,60 +10,46 @@ import java.util.*;
  */
 public class p208 {
     class TrieNode {
-        // Initialize your data structure here.
-        Map<String, TrieNode> children;
-        String value;
-        public TrieNode() {
-            children = new HashMap<>();
+        boolean isWord;
+        TrieNode[] neighbors;
+        TrieNode() {
+            neighbors = new TrieNode[26];
         }
     }
-
-    private TrieNode root;
-
+    TrieNode head;
+    /** Initialize your data structure here. */
     public p208() {
-        root = new TrieNode();
+        head = new TrieNode();
     }
 
-    // Inserts a word into the trie.
+    /** Inserts a word into the trie. */
     public void insert(String word) {
-        int i = 0;
-        TrieNode node = root;
-        while (i++ < word.length()) {
-            if (!node.children.containsKey(word.substring(i,i+1))) {
-                node.children.put(word.substring(i,i+1), new TrieNode());
-            }
-            node = node.children.get(word.substring(i,i+1));
+        TrieNode itr = head;
+        for (char c: word.toCharArray()) {
+            if (itr.neighbors[c-'a'] == null)
+                itr.neighbors[c-'a'] = new TrieNode();
+            itr = itr.neighbors[c-'a'];
         }
-        node.value = word;
-
+        itr.isWord = true;
     }
 
-    // Returns if the word is in the trie.
+    /** Returns if the word is in the trie. */
     public boolean search(String word) {
-        int i = 0;
-        TrieNode node = root;
-        while (i < word.length()) {
-            if (!node.children.containsKey(word.substring(i,i+1))) {
-                return false;
-            }
-            node = node.children.get(word.substring(i,i+1));
-            i++;
+        TrieNode itr = head;
+        for (char c: word.toCharArray()) {
+            if (itr.neighbors[c-'a'] == null) return false;
+            else itr = itr.neighbors[c-'a'];
         }
-        return node.value != null && node.value.equals(word);
+        return itr.isWord;
     }
 
-    // Returns if there is any word in the trie
-    // that starts with the given prefix.
+    /** Returns if there is any word in the trie that starts with the given prefix. */
     public boolean startsWith(String prefix) {
-        int i = 0;
-        TrieNode node = root;
-        while (i < prefix.length()) {
-            if (!node.children.containsKey(prefix.substring(i,i+1))) {
-                return false;
-            }
-            node = node.children.get(prefix.substring(i,i+1));
-            i++;
+        TrieNode itr = head;
+        for (char c: prefix.toCharArray()) {
+            if (itr.neighbors[c-'a'] == null) return false;
+            itr = itr.neighbors[c-'a'];
         }
-        return !node.children.isEmpty() || node.value.equals(prefix);
+        return true;
     }
 }

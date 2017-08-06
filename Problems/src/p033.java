@@ -7,28 +7,24 @@
 
  You are given a target value to search. If found in the array return its index, otherwise return -1.
 
- You may assume no duplicate exists in the array.
+ you may assume no duplicate exists in the array.
  */
 public class p033 {
     public int search(int[] nums, int target) {
-        if (nums == null || nums.length == 0) return -1;
-        int begin = 0, end = nums.length-1;
-        while (begin <= end) {
-            System.out.println("begin = " + begin + ", end = " + end);
-            int mid = (begin + end) / 2;
+        int lo = 0, hi = nums.length -1;
+        while (lo <= hi) {
+            int mid = (lo + hi) / 2;
+            if (target == nums[lo]) return lo;
+            if (target == nums[hi]) return hi;
             if (target == nums[mid]) return mid;
-            if (nums[mid] >= nums[begin]) {
-                if (target < nums[begin] || target > nums[mid]) {
-                    begin = mid + 1;
-                } else {
-                    end = mid - 1;
-                }
-            } else if (nums[mid] < nums[begin]) {
-                if (target < nums[mid] || target > nums[end]) {
-                    end = mid - 1;
-                } else {
-                    begin = mid + 1;
-                }
+            if (nums[mid] < nums[lo]) {
+                if (target < nums[mid] || target > nums[lo]) hi = mid - 1;
+                else if (target > nums[mid] && target < nums[hi]) lo = mid + 1;
+                else return -1;
+            } else {
+                if (target > nums[lo] && target < nums[mid]) hi = mid - 1;
+                else if (target < nums[hi] || target > nums[mid]) lo = mid + 1;
+                else return -1;
             }
         }
         return -1;

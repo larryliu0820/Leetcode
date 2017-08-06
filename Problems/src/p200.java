@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * Created by Valued Customer on 8/13/2016.
  * 200. Number of Islands
@@ -22,26 +25,32 @@
  */
 public class p200 {
     public int numIslands(char[][] grid) {
-        if (grid == null || grid.length == 0) return 0;
-        boolean[][] visited = new boolean[grid.length][grid[0].length];
-        int num = 0;
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                if (!visited[i][j] && grid[i][j] == '1') {
-                    dfs(grid, visited, i, j);
-                    num++;
+        if (grid == null || grid.length == 0 || grid[0].length == 0) return 0;
+        int m = grid.length, n = grid[0].length;
+        boolean[][] visited = new boolean[m][n];
+        Queue<int[]> q = new LinkedList<>();
+        int count = 0;
+        int[][] increments = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == '0' || visited[i][j]) continue;
+                q.offer(new int[]{i, j});
+                while (!q.isEmpty()) {
+                    int[] coor = q.poll();
+                    int r = coor[0], c = coor[1];
+                    visited[r][c] = true;
+                    for (int[] inc : increments) {
+                        if (isValid(grid, visited, r+inc[0], c+inc[1]))
+                            q.offer(new int[]{r+inc[0], c+inc[1]});
+                    }
                 }
+                count++;
             }
         }
-        return num;
+        return count;
     }
-
-    public void dfs(char[][] grid, boolean[][] visited, int row, int col) {
-        if (visited[row][col]) return;
-        visited[row][col] = true;
-        if (row > 0 && grid[row-1][col] == '1') dfs(grid, visited, row-1, col);
-        if (row < grid.length-1 && grid[row+1][col] == '1') dfs(grid, visited, row+1, col);
-        if (col > 0 && grid[row][col-1] == '1') dfs(grid, visited, row, col-1);
-        if (col < grid[0].length-1 && grid[row][col+1] == '1') dfs(grid, visited, row, col+1);
+    private boolean isValid(char[][] grid, boolean[][] visited, int r, int c) {
+        if (r < 0 || r >= grid.length || c < 0 || c >= grid[0].length) return false;
+        return (!visited[r][c]) && grid[r][c] == '1';
     }
 }

@@ -24,26 +24,22 @@
 public class p160 {
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
         if (headA == null || headB == null) return null;
-        ListNode itrA = headA, itrB = headB;
-        while (itrA.next != null && itrB.next != null) {
-            itrA = itrA.next;
-            itrB = itrB.next;
+        ListNode itr1 = headA, itr2 = headB;
+        while (itr1.next != null && itr2.next != null) {
+            itr1 = itr1.next;
+            itr2 = itr2.next;
         }
-
-        ListNode end = itrA.next == null?itrB:itrA;
-        ListNode begin = itrA.next == null?headB:headA;
-
-        while (end.next != null) {
-            end = end.next;
-            begin = begin.next;
+        ListNode itr3 = itr1.next!=null?headA:headB;
+        ListNode itr4 = itr3==headA?headB:headA;
+        ListNode endItr = itr1.next!=null?itr1:itr2;
+        while (endItr.next != null) {
+            itr3 = itr3.next;
+            endItr = endItr.next;
         }
-
-        ListNode itr = itrA.next == null?headA:headB;
-
-        while(itr != null && begin != null) {
-            if (itr == begin) return itr;
-            itr = itr.next;
-            begin = begin.next;
+        while (itr3 != null && itr4 != null) {
+            if (itr3 == itr4) return itr3;
+            itr3 = itr3.next;
+            itr4 = itr4.next;
         }
         return null;
     }
