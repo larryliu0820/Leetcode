@@ -7,11 +7,9 @@ import java.util.Stack;
 public class p387 {
     public int firstUniqChar(String s) {
         int[] memo = new int[26];
-        for (int i = s.length()-1; i >= 0; i--) {
-            memo[s.charAt(i)-'a']++;
-        }
+        for (char c : s.toCharArray()) memo[c-'a']++;
         for (int i = 0; i < s.length(); i++) {
-            if (memo[i] == 1) return i;
+            if (memo[s.charAt(i)-'a'] == 1) return i;
         }
         return -1;
     }

@@ -16,30 +16,41 @@ import java.util.*;
  ]
  */
 public class p015 {
-    public List<List<Integer>> threeSum(int[] num) {
-        List<List<Integer>> result = new ArrayList<>();
-        if (num == null || num.length == 0) return result;
-        Arrays.sort(num);
-        int last = 0;
-        for (int i = 0; i < num.length - 2; i++) {
-            if (i == 0) last = num[0];
-            else {
-                if (last == num[i]) continue;
-                last = num[i];
-            }
-            int begin = i+1, end = num.length - 1;
-            while (begin < end) {
-                int currSum = num[begin] + num[end];
-                if (currSum + num[i] == 0) {
-                    result.add(Arrays.asList(num[i], num[begin], num[end]));
-                    while (begin < end && num[begin] == num[++begin]);
-                    while (begin < end && num[end] == num[--end]);
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> result = new LinkedList<>();
+        if (nums == null || nums.length < 3) return result;
+        Arrays.sort(nums);
 
-                } else if (currSum + num[i] > 0) {
-                    end--;
-                } else begin++;
+        for (int i = 0; i < nums.length-2; i++) {
+            if (i > 0 && nums[i] == nums[i-1]) continue;
+            int lo = i+1, hi = nums.length - 1;
+            int target = -nums[i];
+            while (lo < hi) {
+                if (lo != i+1 && nums[lo] == nums[lo-1]) {
+                    lo++;
+                    continue;
+                }
+                if (hi != nums.length - 1 && nums[hi] == nums[hi+1]) {
+                    hi--;
+                    continue;
+                }
+                if (nums[lo] + nums[hi] > target) hi--;
+                else if (nums[lo] + nums[hi] < target) lo++;
+                else {
+                    List<Integer> ans = new LinkedList<>();
+                    ans.add(nums[i]);
+                    ans.add(nums[lo++]);
+                    ans.add(nums[hi--]);
+                    result.add(ans);
+                }
             }
         }
         return result;
+    }
+
+    public static void main(String[] args) {
+        int[] nums = new int[]{-2, 0, 0, 2, 2};
+        p015 sol = new p015();
+        sol.threeSum(nums);
     }
 }

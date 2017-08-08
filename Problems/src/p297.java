@@ -1,4 +1,7 @@
+import apple.laf.JRSUIUtils;
+
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 /**
@@ -8,46 +11,57 @@ import java.util.Queue;
 public class p297 {
     // Encodes a tree to a single string.
     public String serialize(TreeNode root) {
-        Queue<TreeNode> q = new LinkedList<>();
-        if (root != null) q.offer(root);
         StringBuilder sb = new StringBuilder();
+        Queue<TreeNode> q = new LinkedList<>();
+        Queue<TreeNode> nq = new LinkedList<>();
+        q.offer(root);
         while (!q.isEmpty()) {
-            TreeNode t = q.poll();
-            if (sb.length() != 0) sb.append(",");
-            if (t == null) {
-                sb.append("null");
-                continue;
-            } else sb.append(t.val);
-            q.offer(t.left);
-            q.offer(t.right);
+            while (!q.isEmpty()) {
+                TreeNode itr = q.poll();
+                if (itr == null) {
+                    sb.append("null");
+                } else {
+                    if (sb.length() != 0)
+                        sb.append(',');
+                    sb.append(itr.val);
+                    nq.offer(itr.left);
+                    nq.offer(itr.right);
+                }
+            }
+            Queue<TreeNode> tmp = q;
+            q = nq;
+            nq = tmp;
         }
         return sb.toString();
     }
 
     // Decodes your encoded data to tree.
     public TreeNode deserialize(String data) {
-        if (data.length() == 0) return null;
-        String[] dataStr = data.split(",");
+        String[] nodes = data.split(",");
         Queue<TreeNode> q = new LinkedList<>();
-        TreeNode head = null;
-        if (dataStr.length > 0 && !dataStr[0].equals("null")) {
-            head = new TreeNode(Integer.parseInt(dataStr[0]));
-            q.offer(head);
-        }
+        Queue<TreeNode> nq = new LinkedList<>();
+        if (nodes[0].equals("null")) return null;
+        TreeNode root = new TreeNode(Integer.parseInt(nodes[0]));
+        q.offer(root);
         int index = 1;
         while (!q.isEmpty()) {
-            TreeNode t = q.poll();
-            if (!dataStr[index].equals("null")) {
-                t.left = new TreeNode(Integer.parseInt(dataStr[index]));
-                q.offer(t.left);
+            while (!q.isEmpty()) {
+                TreeNode itr = q.poll();
+                if (!nodes[index].equals("null")) {
+                    itr.left = new TreeNode(Integer.parseInt(nodes[index]));
+                    nq.offer(itr.left);
+                }
+                index++;
+                if (!nodes[index].equals("null")) {
+                    itr.right = new TreeNode(Integer.parseInt(nodes[index]));
+                    nq.offer(itr.right);
+                }
+                index++;
             }
-            index++;
-            if (!dataStr[index].equals("null")) {
-                t.right = new TreeNode(Integer.parseInt(dataStr[index]));
-                q.offer(t.right);
-            }
-            index++;
+            Queue<TreeNode> tmp = q;
+            q = nq;
+            nq = tmp;
         }
-        return head;
+        return root;
     }
 }

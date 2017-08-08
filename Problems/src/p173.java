@@ -12,9 +12,11 @@ import java.util.Stack;
  Note: next() and hasNext() should run in average O(1) time and uses O(h) memory, where h is the height of the tree.
  */
 public class p173 {
-    private Stack<TreeNode> stack = new Stack<>();
+    Stack<TreeNode> stack;
     public p173(TreeNode root) {
-        pushAll(root);
+        stack = new Stack<>();
+        pushLeft(root);
+
     }
 
     /** @return whether we have a next smallest number */
@@ -24,12 +26,15 @@ public class p173 {
 
     /** @return the next smallest number */
     public int next() {
-        TreeNode itr = stack.pop();
-        pushAll(itr.right);
-        return itr.val;
+        TreeNode node = stack.pop();
+        pushLeft(node.right);
+        return node.val;
     }
 
-    public void pushAll(TreeNode node) {
-        for (; node != null; node = node.left) {stack.push(node);}
+    private void pushLeft(TreeNode root) {
+        while (root != null) {
+            stack.push(root);
+            root = root.left;
+        }
     }
 }
