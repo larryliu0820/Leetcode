@@ -1,6 +1,7 @@
 import sun.reflect.generics.tree.Tree;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -23,45 +24,37 @@ import java.util.List;
  ]
  */
 public class p103 {
+
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
-        List<List<Integer>> results = new ArrayList<>();
-        if (root == null) return results;
-
-        List<TreeNode> list = new ArrayList<>();
-        List<TreeNode> childList = new ArrayList<>();
-        list.add(root);
-
+        List<List<Integer>> result = new LinkedList<>();
+        if (root == null) return result;
         boolean leftToRight = true;
-
-        List<Integer> result = new ArrayList<>();
-        boolean needSwitch = false;
-        while(!list.isEmpty() || !childList.isEmpty()) {
-            TreeNode r = list.remove(0);
-            result.add(r.val);
-            if (list.isEmpty()) {
-                results.add(result);
-                result = new ArrayList<>();
-                needSwitch = true;
+        List<TreeNode> level = new LinkedList<>();
+        List<TreeNode> nextLevel = new LinkedList<>();
+        level.add(root);
+        while (!level.isEmpty() || !nextLevel.isEmpty()) {
+            List<Integer> levelRes = new LinkedList<>();
+            while (!level.isEmpty()) {
+                if (leftToRight) {
+                    TreeNode itr = level.remove(0);
+                    levelRes.add(itr.val);
+                    if (itr.left != null) nextLevel.add(itr.left);
+                    if (itr.right != null) nextLevel.add(itr.right);
+                } else {
+                    TreeNode itr = level.remove(level.size()-1);
+                    levelRes.add(itr.val);
+                    if (itr.right != null) nextLevel.add(0, itr.right);
+                    if (itr.left != null) nextLevel.add(0, itr.left);
+                }
             }
-            if (leftToRight) {
-                if (r.left != null) childList.add(0, r.left);
-                if (r.right != null) childList.add(0, r.right);
-            } else {
-                if (r.right != null) childList.add(0, r.right);
-                if (r.left != null) childList.add(0, r.left);
-            }
-            if (needSwitch) {
-                leftToRight ^= true;
-                List<TreeNode> temp = childList;
-                childList = list;
-                list = temp;
-                needSwitch = false;
-            }
-
+            leftToRight ^= true;
+            List<TreeNode> temp = level;
+            level = nextLevel;
+            nextLevel = temp;
+            result.add(levelRes);
         }
-        return results;
+        return result;
     }
-
     public static void main(String[] args) {
         p103 sol = new p103();
         TreeNode root = new TreeNode(1);

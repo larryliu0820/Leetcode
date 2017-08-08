@@ -21,34 +21,13 @@ import java.util.Map;
  */
 public class p001 {
     public int[] twoSum(int[] nums, int target) {
-        if (nums == null || nums.length == 0) return null;
-        Num[] objNums = new Num[nums.length];
+        Map<Integer, Integer> map = new HashMap<>();
         for (int i = 0; i < nums.length; i++) {
-            objNums[i] = new Num(nums[i], i);
-        }
-        Arrays.sort(objNums);
-        int begin = 0, end = nums.length-1;
-        while (begin < end) {
-            int currSum = objNums[begin].val + objNums[end].val;
-            if (currSum == target) {
-                return new int[]{objNums[begin].ind, objNums[end].ind};
-            } else if (currSum < target) begin++;
-            else end--;
+            if (map.containsKey(target-nums[i])) {
+                return new int[]{map.get(target-nums[i]), i};
+            }
+            map.put(nums[i], i);
         }
         return null;
-    }
-
-    private class Num implements Comparable<Num> {
-        int val;
-        int ind;
-        public Num(int val, int ind) {
-            this.val = val;
-            this.ind = ind;
-        }
-
-        @Override
-        public int compareTo(Num n) {
-            return this.val - n.val;
-        }
     }
 }

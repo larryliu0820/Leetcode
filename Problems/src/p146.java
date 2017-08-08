@@ -11,75 +11,78 @@ import java.util.Map;
  should invalidate the least recently used item before inserting a new item.
  */
 public class p146 {
-    private class Node{
-        int key, value;
-        Node prev, next;
-        Node(int k, int v){
-            this.key = k;
-            this.value = v;
-        }
-        Node(){
-            this(0, 0);
-        }
+    class DListNode {
+        DListNode prev, next;
+        int key,val;
+        DListNode() {}
+        DListNode(int k, int v) { key = k; val = v; }
     }
-    private int capacity, count;
-    private Map<Integer, Node> map;
-    private Node head, tail;
-
+    DListNode head;
+    DListNode tail;
+    int CAPACITY;
+    Map<Integer, DListNode> map;
     public p146(int capacity) {
-        this.capacity = capacity;
-        this.count = 0;
-        map = new HashMap<>();
-        head = new Node();
-        tail = new Node();
+        CAPACITY = capacity;
+        head = new DListNode();
+        tail = new DListNode();
         head.next = tail;
         tail.prev = head;
+        map = new HashMap<>();
     }
 
     public int get(int key) {
-        Node n = map.get(key);
-        if(null==n){
-            return -1;
-        }
-        update(n);
-        return n.value;
+        if (map.containsKey(key)) {
+            DListNode node = map.get(key);
+            remove(node);
+            insert(node);
+            return node.val;
+        } else return -1;
     }
 
-    public void set(int key, int value) {
-        Node n = map.get(key);
-        if(null==n){
-            n = new Node(key, value);
-            map.put(key, n);
-            add(n);
-            ++count;
-        }
-        else{
-            n.value = value;
-            update(n);
-        }
-        if(count>capacity){
-            Node toDel = tail.prev;
-            remove(toDel);
-            map.remove(toDel.key);
-            --count;
+    public void put(int key, int value) {
+        if (map.containsKey(key)) {
+            get(key);
+            map.get(key).val = value;
+        } else {
+            if (map.keySet().size() >= CAPACITY) {
+                map.remove(head.next.key);
+                remove(head.next);
+            }
+            DListNode node = new DListNode(key, value);
+            insert(node);
+            map.put(key, node);
         }
     }
 
-    private void update(Node node){
-        remove(node);
-        add(node);
-    }
-    private void add(Node node){
-        Node after = head.next;
-        head.next = node;
-        node.prev = head;
-        node.next = after;
-        after.prev = node;
+    private void remove(DListNode node) {
+        DListNode prev = node.prev;
+        DListNode next = node.next;
+        node.next = null;
+        node.prev = null;
+        prev.next = next;
+        next.prev = prev;
     }
 
-    private void remove(Node node){
-        Node before = node.prev, after = node.next;
-        before.next = after;
-        after.prev = before;
+    private void insert(DListNode node) {
+        DListNode next = tail;
+        DListNode prev = tail.prev;
+        next.prev = node;
+        prev.next = node;
+        node.prev = prev;
+        node.next = next;
+    }
+
+    public static void main(String[] args) {
+        p146 sol = new p146(2);
+        sol.get(2);
+        sol.put(1,1);
+        sol.put(2,2);
+        sol.get(1);
+        sol.put(3,3);
+        sol.get(2);
+        sol.put(4,4);
+        sol.get(1);
+        sol.get(3);
+        sol.get(4);
     }
 }

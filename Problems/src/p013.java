@@ -7,24 +7,19 @@ public class p013 {
         String units = "IVXLCDM";
 
         int result = 0;
-        for  (int index = 0;index < s.length();index++) {
-            char curr = s.charAt(index);
-
-            int i = units.indexOf(curr);
-            if (i == 6) {
-                result += 1000;
-            } else if (i % 2 == 1) {
-                result += 5 * Math.pow(10, i >> 1);
-
-            } else {
-                if (index < s.length() - 1 &&
-                        (s.charAt(index+1) == units.charAt(i+1) || s.charAt(index+1) == units.charAt(i+2))) {
-                    result -= Math.pow(10, i >> 1);
-                } else {
-                    result += Math.pow(10, i >> 1);
+        for (int i = 0; i < s.length(); i++) {
+            int index = units.indexOf(s.charAt(i));
+            if ( index % 2 == 0) {
+                int value = (int) Math.pow(10, index/2);
+                if (i < s.length()-1 &&
+                        units.indexOf(s.charAt(i+1)) - index <= 2 &&
+                        units.indexOf(s.charAt(i+1)) - index > 0) {
+                    value *= -1;
                 }
-
-
+                result += value;
+            } else {
+                int value = (int) (5 * Math.pow(10, (index-1)/2));
+                result += value;
             }
         }
         return result;

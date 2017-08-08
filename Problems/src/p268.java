@@ -5,19 +5,17 @@
  */
 public class p268 {
     public int missingNumber(int[] nums) {
-        int i = 0;
-        while (i < nums.length) {
-            if (i == nums[i] || nums[i] >= nums.length) i++;
-            else swap(nums, i, nums[i]);
+        for (int i = 0; i < nums.length; i++) {
+            while (nums[i] < nums.length && nums[i] != i)
+                swap(nums, i, nums[i]);
         }
-        for (i = 0; i < nums.length; i++)
-            if (nums[i] != i) return i;
-        return i;
+        for (int i = 0; i < nums.length; i++) if (nums[i] != i) return i;
+        return nums.length;
     }
 
-    private void swap(int[] nums, int i, int j) {
-        int temp = nums[i];
-        nums[i] = nums[j];
-        nums[j] = temp;
+    private void swap(int[] A, int i, int j) {
+        int temp = A[i];
+        A[i] = A[j];
+        A[j] = temp;
     }
 }

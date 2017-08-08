@@ -20,12 +20,12 @@
 public class p121 {
     public int maxProfit(int[] prices) {
         if (prices == null || prices.length == 0) return 0;
-        int bought = prices[0];
-        int result = 0;
+        int min = prices[0];
+        int profit = 0;
         for (int i = 1; i < prices.length; i++) {
-            if (prices[i] > bought) result = Math.max(prices[i] - bought, result);
-            else bought = prices[i];
+            profit = Math.max(profit, prices[i]-min);
+            min = Math.min(min, prices[i]);
         }
-        return result;
+        return profit;
     }
 }

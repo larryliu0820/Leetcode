@@ -4,12 +4,11 @@
  */
 public class p168 {
     public String convertToTitle(int n) {
-        String result = "";
+        String res = "";
         while (n > 0) {
-            int v = (n-1) % 26;
-            result = (char)('A' + v) + result;
-            n = (n-1) / 26;
+            res = (char)('A' + (n-1) % 26) + res;
+            n = (n-1)/26;
         }
-        return result;
+        return res;
     }
 }

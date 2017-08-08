@@ -4,18 +4,11 @@
  */
 public class p237 {
     public void deleteNode(ListNode node) {
-        ListNode n = node.next;
-        while (n != null) {
-            node.val = n.val;
-            if (n.next == null) {
-                node.next = null;
-                break;
-            }
-            else {
-                node = node.next;
-                n = n.next;
-            }
-
+        while (node.next.next != null) {
+            node.val = node.next.val;
+            node = node.next;
         }
+        node.val = node.next.val;
+        node.next = null;
     }
 }

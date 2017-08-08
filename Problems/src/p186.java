@@ -4,31 +4,30 @@
  */
 public class p186 {
     public void reverseWords(char[] s) {
-        int wordBegin = 0, wordEnd = 0;
-        if (s == null || s.length == 0) return;
-        boolean isWord = s[0] != ' ';
-        for (; wordEnd <= s.length; wordEnd++) {
-            if (wordEnd == s.length || s[wordEnd] == ' ') {
-                if (isWord) {
-                    reverse(s, wordBegin, wordEnd - 1);
-                    wordBegin = wordEnd;
-                    isWord = false;
-                } else wordBegin ++;
-            } else {
-                if (!isWord) wordBegin = wordEnd;
-                isWord = true;
+        reverse(s, 0, s.length-1);
+        boolean inWord = false;
+        int wordHead = 0, wordTail = 0;
+        for (;wordTail <= s.length; wordTail++) {
+            if (wordTail < s.length && s[wordTail] != ' ' && !inWord) {
+                inWord = true;
+                wordHead = wordTail;
+            }
+            if (wordTail == s.length || s[wordTail] == ' ') {
+                if (inWord) {
+                    reverse(s, wordHead, wordTail - 1);
+                    inWord = false;
+                }
             }
         }
-        reverse(s, 0, s.length-1);
     }
 
-    private void reverse(char[] s, int begin, int end) {
-        if (begin < 0 || end < 0 || begin >= s.length || end >= s.length || begin > end) return;
-        int i = begin, j = end;
-        while (i < j) {
-            char temp = s[i];
-            s[i++] = s[j];
-            s[j--] = temp;
+    private void reverse(char[] s, int b, int e) {
+        while (b < e) {
+            char temp = s[b];
+            s[b] = s[e];
+            s[e] = temp;
+            b++;
+            e--;
         }
     }
 }

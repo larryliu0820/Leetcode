@@ -5,17 +5,16 @@
  */
 public class p238 {
     public int[] productExceptSelf(int[] nums) {
-        int[] res = new int[nums.length];
-        if (nums.length < 2) return res;
-        res[0] = 1;
+        int[] result = new int[nums.length];
+        result[0] = 1;
         for (int i = 1; i < nums.length; i++) {
-            res[i] = res[i-1] * nums[i-1];
+            result[i] = nums[i-1] * result[i-1];
         }
-        int right = 1;
-        for (int i = nums.length - 1; i >= 0; i--) {
-            res[i] *= right;
-            right *= nums[i];
+        int k = 1;
+        for (int i = nums.length-1; i >= 0; i--) {
+            result[i] = k * result[i];
+            k *= nums[i];
         }
-        return res;
+        return result;
     }
 }
