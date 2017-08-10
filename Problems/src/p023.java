@@ -6,17 +6,16 @@ import java.util.PriorityQueue;
  */
 public class p023 {
     public ListNode mergeKLists(ListNode[] lists) {
-        PriorityQueue<ListNode> pq = new PriorityQueue<>((i, j)->i.val - j.val);
-        for (ListNode n: lists)
-            if (n != null) pq.offer(n);
-        ListNode result = new ListNode(0);
-        ListNode itr = result;
+        if (lists == null || lists.length == 0) return null;
+        PriorityQueue<ListNode> pq = new PriorityQueue<>((i,j)->i.val - j.val);
+        for (ListNode node: lists) if (node != null) pq.offer(node);
+        ListNode root = new ListNode(0);
+        ListNode itr = root;
         while (!pq.isEmpty()) {
-            ListNode curr = pq.poll();
-            itr.next = new ListNode(curr.val);
-            if (curr.next != null) pq.offer(curr.next);
+            itr.next = pq.poll();
             itr = itr.next;
+            if (itr.next != null) pq.offer(itr.next);
         }
-        return result.next;
+        return root.next;
     }
 }

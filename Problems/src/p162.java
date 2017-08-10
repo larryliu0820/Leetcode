@@ -13,11 +13,16 @@
  */
 public class p162 {
     public int findPeakElement(int[] nums) {
-        if (nums.length == 0) return -1;
-        if (nums.length == 1) return 0;
-        for (int i = 1; i < nums.length; i++) {
-            if (nums[i] - nums[i-1] < 0) return i-1;
+        if (nums.length < 3) return -1;
+        int lo = 0, hi = nums.length-1;
+        while (lo < hi) {
+            int mid1 = (lo + hi) / 2;
+            int mid2 = mid1 + 1;
+            if (nums[mid1] < nums[mid2]) {
+                lo = mid2;
+            } else
+                hi = mid1;
         }
-        return nums.length - 1;
+        return lo;
     }
 }

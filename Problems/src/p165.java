@@ -14,27 +14,15 @@
  */
 public class p165 {
     public int compareVersion(String version1, String version2) {
-        if (!version1.contains(".") && !version2.contains(".")) {
-            if (Integer.parseInt(version1) == Integer.parseInt(version2)) return 0;
-            else if (Integer.parseInt(version1) < Integer.parseInt(version2)) return -1;
-            else return 1;
-        }
         String[] v1 = version1.split("\\.");
         String[] v2 = version2.split("\\.");
-
-        int i = 0;
-        int longLen = v1.length > v2.length?v1.length:v2.length;
-        for (; i < longLen; i++) {
-            int ver1 = 0;
-            if (i < v1.length)
-                ver1 = Integer.parseInt(v1[i]);
-            int ver2 = 0;
-            if (i < v2.length)
-                ver2 = Integer.parseInt(v2[i]);
-            if (ver1 < ver2) return -1;
-            else if (ver1 > ver2) return 1;
+        int len1 = v1.length, len2 = v2.length;
+        for (int i = 0; i < Math.max(len1, len2); i++) {
+            int val1 = (i<len1)?Integer.parseInt(v1[i]):0;
+            int val2 = (i<len2)?Integer.parseInt(v2[i]):0;
+            if (val1 > val2) return 1;
+            else if (val1 < val2) return -1;
         }
-
         return 0;
     }
 

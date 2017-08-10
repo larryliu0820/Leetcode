@@ -8,20 +8,17 @@
  You are guaranteed to have only one unique value in the BST that is closest to the target.
  */
 public class p270 {
-
     public int closestValue(TreeNode root, double target) {
-        int mid = root.val;
-        if (target > mid) {
-            if (root.right != null) {
-                int rightResult = closestValue(root.right, target);
-                return Math.abs(rightResult - target) > Math.abs(mid - target) ? mid: rightResult;
-            }
-        } else {
-            if (root.left != null) {
-                int leftResult = closestValue(root.left, target);
-                return Math.abs(leftResult - target) > Math.abs(mid - target) ? mid: leftResult;
+        int closest = root.val;
+        TreeNode itr = root;
+        while (itr!=null) {
+            closest = Math.abs(itr.val - target) > Math.abs(closest-target)?closest:itr.val;
+            if (itr.val > target) {
+                itr = itr.left;
+            } else {
+                itr = itr.right;
             }
         }
-        return mid;
+        return closest;
     }
 }

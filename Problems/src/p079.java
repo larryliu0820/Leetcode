@@ -22,57 +22,53 @@ import java.util.List;
  word = "ABCB", -> returns false.
  */
 public class p079 {
+    class TrieNode {
+        TrieNode[] neighbors;
+        boolean isWord;
+        TrieNode() {
+            neighbors = new TrieNode[256];
+            isWord = false;
+        }
+    }
+    boolean[][] visited;
+    char[][] board;
     public boolean exist(char[][] board, String word) {
-        char[] wordArray = word.toCharArray();
-        if (board == null || board[0].length == 0) return false;
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                System.out.println("i = " + i + ", j = " + j);
-                if (word.charAt(0) != board[i][j]) continue;
-                if(dfs(board, new boolean[board.length][board[0].length], new int[]{i,j}, wordArray, 0)) return true;
+        TrieNode root = new TrieNode();
+        TrieNode itr = root;
+        for (char c: word.toCharArray()) {
+            itr.neighbors[c] = new TrieNode();
+            itr = itr.neighbors[c];
+        }
+        itr.isWord = true;
+        this.board = board;
+        int m = board.length, n = board[0].length;
+        visited = new boolean[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (dfs(i, j, root)) return true;
             }
         }
         return false;
     }
 
-    public boolean dfs(char[][] board, boolean[][] visited, int[] pos, char[] word, int index) {
-        if (visited[pos[0]][pos[1]]) return false;
-        if (word[index] != board[pos[0]][pos[1]]) return false;
-
-        visited[pos[0]][pos[1]] = true;
-        if (index == word.length - 1) return true;
-        // up
-        if (pos[0] > 0) {
-            pos[0]--;
-            if (dfs(board, visited, pos, word, index+1)) return true;
-            pos[0]++;
-        }
-
-        // left
-        if (pos[1] > 0) {
-            pos[1]--;
-            if (dfs(board, visited, pos, word, index+1)) return true;
-            pos[1]++;
-        }
-
-        // down
-        if (pos[0] < board.length - 1) {
-            pos[0]++;
-            if (dfs(board, visited, pos, word, index+1)) return true;
-            pos[0]--;
-        }
-
-        // right
-        if (pos[1] < board[0].length - 1) {
-            pos[1]++;
-            if (dfs(board, visited, pos, word, index+1)) return true;
-            pos[1]--;
-        }
-
-        visited[pos[0]][pos[1]] = false;
+    private boolean dfs(int i, int j, TrieNode node) {
+        if (!isValid(i,j) || visited[i][j]) return false;
+        if (node.neighbors[board[i][j]] == null) return false;
+        else if (node.neighbors[board[i][j]].isWord) return true;
+        visited[i][j] = true;
+        TrieNode nextNode = node.neighbors[board[i][j]];
+        if (dfs(i+1, j, nextNode)) return true;
+        if (dfs(i-1, j, nextNode)) return true;
+        if (dfs(i, j+1, nextNode)) return true;
+        if (dfs(i, j-1, nextNode)) return true;
+        visited[i][j] = false;
         return false;
     }
 
+    private boolean isValid(int i, int j) {
+        int m = board.length, n = board[0].length;
+        return (i < m && i >= 0 && j < n && j >= 0);
+    }
     public static void main(String[] args) {
         p079 sol = new p079();
         char[][] board = new char[3][];
