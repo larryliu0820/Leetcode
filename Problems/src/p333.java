@@ -17,50 +17,45 @@ import org.w3c.dom.Attr;
  The return value is the subtree's size, which is 3.
  */
 public class p333 {
-    class Attributes {
-        Attributes() {min = 0; max = 0; size = 0;}
-        int min;
-        int max;
-        int size;
-        void set(int min, int max, int size) {
-            this.min = min;
-            this.max = max;
-            this.size = size;
+    class Result {
+        int max, min;
+        boolean isBST;
+        public Result() {
+            max = 0;
+            min = 0;
+            isBST = false;
+        }
+        public void set(int a, int i, boolean b) {
+            max = a;
+            min = i;
+            isBST = b;
         }
     }
+    int maxSize;
     public int largestBSTSubtree(TreeNode root) {
-        if (root == null) return 0;
-        Attributes res = new Attributes();
-        isBST(root, res);
-        return res.size;
+        helper(root, new Result());
+        return maxSize;
     }
 
-    private boolean isBST(TreeNode root, Attributes attr) {
-        if (root.left == null && root.right == null) {
-            attr.size = 1;
-            attr.min = root.val;
-            attr.max = root.val;
-            return true;
+    private int helper(TreeNode node, Result res) {
+        if (node == null) {
+            res.set(Integer.MIN_VALUE, Integer.MAX_VALUE, true);
+            return 0;
         }
-        boolean leftRes = false;
-        Attributes leftAttr = new Attributes();
-        if (root.left != null) leftRes = isBST(root.left, leftAttr);
-        boolean rightRes = false;
-        Attributes rightAttr = new Attributes();
-        if (root.right != null) rightRes = isBST(root.right, rightAttr);
+        Result leftRes = new Result();
+        Result rightRes = new Result();
 
-        if (rightRes && leftRes && leftAttr.max < root.val && root.val < rightAttr.min) {
-            attr.set(leftAttr.min, rightAttr.max, leftAttr.size + rightAttr.size + 1);
-            return true;
-        } else if (rightRes && leftAttr.size == 0 && root.val < rightAttr.min){
-            attr.set(root.val, rightAttr.max, rightAttr.size + 1);
-            return true;
-        } else if (leftRes && rightAttr.size == 0 && root.val > leftAttr.max) {
-            attr.set(leftAttr.min, root.val, leftAttr.size + 1);
-            return true;
-        } else {
-            attr.size = Math.max(leftAttr.size, rightAttr.size);
-            return false;
+        int leftSize = helper(node.left, leftRes);
+        int rightSize = helper(node.right, rightRes);
+
+        if (leftRes.isBST && node.val > leftRes.max && rightRes.isBST && node.val < rightRes.min) {
+            res.set(rightRes.max>node.val?rightRes.max:node.val, leftRes.min<node.val?leftRes.min:node.val, true);
+            int size = leftSize + rightSize + 1;
+            maxSize = Math.max(size, maxSize);
+            return size;
         }
+
+        return 0;
+
     }
 }

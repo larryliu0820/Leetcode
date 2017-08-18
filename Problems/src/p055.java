@@ -14,36 +14,16 @@
  */
 public class p055 {
     public boolean canJump(int[] nums) {
-//        boolean[] canJump = new boolean[nums.length];
-//        canJumpHelper(nums, 0, canJump);
-//        return canJump[0];
-        int lastJumpInd = nums.length - 1;
-        for (int i = nums.length - 1; i >= 0; i--) {
-            if (nums[i] == 0) continue;
-            if (nums[i] + i >= lastJumpInd) lastJumpInd = i;
+        int last = nums.length -1;
+        for (int i = nums.length - 2; i >= 0; i--) {
+            if (i + nums[i] >= last) last = i;
         }
-        return lastJumpInd == 0;
-    }
-
-    public void canJumpHelper(int[] nums, int index, boolean[] canJump) {
-        if (index == nums.length - 1 || nums[index] >= nums.length - index - 1) {
-            canJump[index] = true;
-            return;
-        }
-        for (int i = index + 1; i <= index + nums[index]; i++) {
-            if (i > nums.length - 1) return;
-            canJumpHelper(nums, i, canJump);
-            if (canJump[i]) {
-                canJump[index] = true;
-                break;
-            }
-        }
-
+        return last<=0;
     }
 
     public static void main(String[] args) {
         p055 sol = new p055();
-        int[] nums = new int[]{2,3,1,1,4};
+        int[] nums = new int[]{0,2,3};
         System.out.println("result = " + sol.canJump(nums));
     }
 }

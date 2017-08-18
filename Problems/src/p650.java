@@ -6,16 +6,17 @@ public class p650 {
     public int minSteps(int n) {
         if (n == 1) return 0;
         int[] dp = new int[n+1];
+        dp[1] = 0;
         dp[2] = 2;
 
         for (int i = 3; i <= n; i++) {
-            int minStep = Integer.MAX_VALUE;
+            dp[i] = Integer.MAX_VALUE;
             for (int j = 1; j <= i/2; j++) {
                 if (i % j != 0) continue;
-                minStep = Math.min(i / j + dp[i], minStep);
+                dp[i] = Math.min(i/j + dp[j], dp[i]);
             }
-            dp[i] = minStep;
         }
         return dp[n];
+
     }
 }
