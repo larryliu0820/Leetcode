@@ -8,28 +8,15 @@ import java.util.Stack;
  */
 public class p513 {
     public int findBottomLeftValue(TreeNode root) {
-        Queue<TreeNode> q = new LinkedList<>();
-        int[] size = new int[2];
-        size[0] = 1;
-        int ind = 0;
-        q.offer(root);
-        int result = root.val;
-        while (!q.isEmpty()) {
-            TreeNode curr = q.poll();
-            if (curr.left != null) {
-                q.offer(curr.left);
-                size[(ind+1)%2]++;
-            }
-            if (curr.right != null) {
-                q.offer(curr.right);
-                size[(ind+1)%2]++;
-            }
-            size[ind]--;
-            if (size[ind] == 0) {
-                ind = (ind+1) %2;
-                if (!q.isEmpty() && q.size() == size[ind]) result = q.peek().val;
-            }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            root = queue.poll();
+            if (root.right != null)
+                queue.add(root.right);
+            if (root.left != null)
+                queue.add(root.left);
         }
-        return result;
+        return root.val;
     }
 }
