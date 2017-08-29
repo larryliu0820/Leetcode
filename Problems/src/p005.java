@@ -5,34 +5,36 @@
  * You may assume that the maximum length of S is 1000, and there exists one unique longest palindromic substring.
  */
 public class p005 {
+
     public String longestPalindrome(String s) {
-        if (s.length() == 1) return s;
         int maxLen = 0;
-        String p = "";
-        for (int i = 0; i < s.length() - 1; i++) {
-            int len = expandToFind(s, i, i);
-            int len2 = expandToFind(s, i, i+1);
-            int larger = len > len2?len:len2;
-            if (larger > maxLen) {
-                maxLen = larger;
-                p = s.substring(larger%2==0?i-maxLen/2+1:i-maxLen/2, i+maxLen/2+1);
+        String result = s.substring(0,1);
+        for (int i = 0; i < s.length() - maxLen/2; i++) {
+            String s1 = expandToFind(s, i, i);
+            if (s1.length() > maxLen) {
+                maxLen = s1.length();
+                result = s1;
+            }
+            String s2 = expandToFind(s, i, i+1);
+            if (s2.length() > maxLen) {
+                maxLen = s2.length();
+                result = s2;
             }
 
         }
-        return p;
+        return result;
     }
 
-    public int expandToFind(String s, int left, int right) {
+    private String expandToFind(String s, int left, int right) {
         while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
             left--;
             right++;
         }
-        return right - left - 1;
+        return s.substring((left+1)<0?0:(left+1), right);
     }
-
     public static void main(String[] args) {
         p005 sol = new p005();
-        String result = sol.longestPalindrome("bb");
+        String result = sol.longestPalindrome("a");
         System.out.println("result = " + result);
     }
 }
