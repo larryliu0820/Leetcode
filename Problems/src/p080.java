@@ -1,5 +1,5 @@
 /**
- * Created by Valued Customer on 8/5/2016.
+ * Created by Valued Customer on 9/6/2017.
  * 80. Remove Duplicates from Sorted Array II
  * Follow up for "Remove Duplicates":
  What if duplicates are allowed at most twice?
@@ -12,25 +12,23 @@
 public class p080 {
     public int removeDuplicates(int[] nums) {
         if(nums == null || nums.length == 0) return 0;
-        if(nums.length == 1) return 1;
-        int itr = 0;
-        int diffItr = 1;
-        int dup = nums[0], occur = 1;
-        for (; diffItr < nums.length; diffItr++) {
-            if (nums[diffItr] == dup) {
-                if (occur < 2) nums[++itr] = nums[diffItr];
-                occur++;
+        int j = 0;
+        boolean dup = false;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] == nums[j]) {
+                if (!dup) {
+                    nums[++j] = nums[i];
+                    dup = true;
+                }
             } else {
-                dup = nums[diffItr];
-                occur = 1;
-                nums[++itr] = dup;
+                dup = false;
+                nums[++j] = nums[i];
             }
-
         }
-        System.out.print("[");
-        for (int i : nums) System.out.print(i + ",");
-        System.out.print("]\n");
-        return itr+1;
+//        System.out.print("[");
+//        for (int i : nums) System.out.print(i + ",");
+//        System.out.print("]\n");
+        return j+1;
     }
 
     public static void main(String[] args) {

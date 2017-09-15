@@ -1,5 +1,5 @@
 /**
- * Created by Valued Customer on 8/3/2016.
+ * Created by Valued Customer on 9/3/2017.
  * 69. Sqrt(x)
  * Implement int sqrt(int x).
 
@@ -7,21 +7,22 @@
  * */
 public class p069 {
     public int mySqrt(int x) {
-        double eps = 0.0001;
-        if (x < 2) return x;
-//        float guess = x/2 < overflowLimit? x/2:overflowLimit;
-        double guess = x/2;
-        double lastGuess = 0;
-        while ( Math.abs(guess - lastGuess) > eps) {
-            //System.out.println("guess = " + guess);
-            lastGuess = guess;
-            guess = (lastGuess + x / lastGuess) / 2;
+        if (x == 0) return 0;
+        int s = 1, e = x;
+
+        while (s <= e) {
+            int m = s / 2 + e / 2 + (s % 2 + e % 2) / 2;
+            int q = x / m;
+            if (q == m) return m;
+            else if (q < m) e = m - 1;
+            else s = m + 1;
         }
-        return (int)guess;
+
+        return e;
     }
 
     public static void main(String[] args) {
         p069 sol = new p069();
-        System.out.println(sol.mySqrt(2147395599));
+        System.out.println(sol.mySqrt(3));
     }
 }
