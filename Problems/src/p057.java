@@ -19,49 +19,47 @@ import java.util.List;
  */
 public class p057 {
     public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
-        List<Interval> result = new ArrayList<>();
-        if (intervals == null || intervals.size() == 0 ) {
-            result.add(newInterval);
-            return result;
+        int beginIndex = binarySearch(intervals, newInterval.start);
+        int endIndex = binarySearch(intervals, newInterval.end);
+        if (beginIndex == -1 || intervals.get(beginIndex).end < newInterval.start) {
+            intervals.add(++beginIndex, newInterval);
+            endIndex ++;
         }
-        //binary search the index to merge/insert
-        int index = 0;
-        Interval curr = new Interval(newInterval.start, newInterval.end);
-        if (newInterval.start < intervals.get(0).start) index = 0;
-        else {
-            int low = 0, high = intervals.size()-1;
-            while (low <= high) {
-                int mid = (low + high) / 2;
-                if (newInterval.start >= intervals.get(mid).start) {
-                    if (mid == intervals.size()-1 || newInterval.start < intervals.get(mid+1).start) {
-                        index = mid;
-                        break;
-                    }
-                    else low = mid+1;
-                } else high = mid-1;
-            }
-            if (low == high) index = low;
+        intervals.get(beginIndex).end = Math.max(newInterval.end, intervals.get(endIndex).end);
+        List<Interval> res = new LinkedList<>();
+        for (int i = 0; i <= beginIndex; i++) {
+            res.add(intervals.get(i));
+        }
 
-            if (newInterval.start > intervals.get(index).end) {
-                index++;
+        for (int i = endIndex+1; i < intervals.size(); i++) {
+            res.add(intervals.get(i));
+        }
+        return res;
+    }
+
+    private int binarySearch(List<Interval> intervals, int time) {
+        int s = 0, e = intervals.size()-1;
+        while (s <= e) {
+            int m = (s + e) / 2;
+
+            if (intervals.get(m).start <= time) {
+                s = m + 1;
             } else {
-                curr.start = intervals.get(index).start;
+                e = m - 1;
             }
         }
-        int end = index;
-        while (end < intervals.size() && intervals.get(end).end < newInterval.end) end++;
+        return e;
+    }
 
+    public static void main(String[] args) {
+        p057 sol = new p057();
+        List<Interval> list = new LinkedList<>();
+        list.add(new Interval(1,2));
+        list.add(new Interval(3,5));
+        list.add(new Interval(6,7));
+        list.add(new Interval(8,10));
+        list.add(new Interval(12,16));
+        sol.insert(list, new Interval(0, 1));
 
-        for (int i = 0; i < index; i++) result.add(intervals.get(i));
-        if (end == intervals.size()) {
-            curr.end = newInterval.end;
-        } else if (curr.end >= intervals.get(end).start){
-            curr.end = intervals.get(end).end;
-            end++;
-        }
-
-        result.add(curr);
-        for (int i = end; i < intervals.size(); i++) result.add(intervals.get(i));
-        return result;
     }
 }

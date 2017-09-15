@@ -1,3 +1,4 @@
+import java.util.Queue;
 import java.util.Stack;
 
 /**
@@ -11,32 +12,22 @@ import java.util.Stack;
  */
 public class p071 {
     public String simplifyPath(String path) {
-        char[] p = path.toCharArray();
-        if (path.equals("/")) return "/";
-        String result = "";
-        String dirName = "";
-        Stack<String> directories = new Stack<>();
-        for (int i = 0; i <= p.length; i++) {
-            if (i == p.length || p[i] == '/' ) {
-                if (dirName.length() > 0) {
-                    if (dirName.equals("..")) {
-                        if (!directories.isEmpty())
-                            directories.pop();
-                    } else if (!dirName.equals("."))
-                        directories.push(dirName);
-                    dirName = "";
-                }
-            } else {
-                dirName += p[i];
-            }
+        String[] dirNames = path.split("/");
+        Stack<String> stack = new Stack<>();
+        for (String dir : dirNames) {
+            if (dir.equals("") || dir.equals(".")) continue;
+            if (dir.equals("..")) {
+                if (!stack.isEmpty()) stack.pop();
+            } else stack.push(dir);
         }
+        StringBuilder sb = new StringBuilder();
+        while (!stack.isEmpty()) {
+            sb.insert(0, stack.pop());
+            sb.insert(0, "/");
 
-        while (!directories.isEmpty()) {
-            String dir = directories.pop();
-            result = "/" + dir + result;
         }
-        if (result.equals("")) result = "/";
-        return result;
+        if (sb.length() == 0) sb.append("/");
+        return sb.toString();
     }
 
     public static void main(String[] args) {

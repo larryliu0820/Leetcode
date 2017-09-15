@@ -1,8 +1,9 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by mengwliu on 8/5/16.
+ * Created by mengwliu on 9/5/17.
  * 78. Subsets
  *  Given a set of distinct integers, nums, return all possible subsets.
 
@@ -25,19 +26,19 @@ import java.util.List;
  */
 public class p078 {
     public List<List<Integer>> subsets(int[] nums) {
-        List<List<Integer>> result = new ArrayList<>();
-        result.add(new ArrayList<>());
-        if (nums == null || nums.length == 0) return result;
-        for (int i = 0; i < nums.length; i ++) {
-            int currInt = nums[i];
-            int resultSize = result.size();
-            for (int j = 0; j < resultSize; j++) {
-                List<Integer> copy = new ArrayList<>(result.get(j));
-                copy.add(currInt);
-                result.add(copy);
+        List<List<Integer>> res = new LinkedList<>();
+        res.add(new LinkedList<>());
+        for (int i : nums) {
+            List<List<Integer>> temp = new LinkedList<>();
+            for (List<Integer> list: res) {
+                temp.add(new LinkedList<>(list));
+                list.add(i);
+                temp.add(new LinkedList<>(list));
             }
+            res = temp;
         }
-        return result;
+
+        return res;
     }
 
     public static void main(String[] args) {
