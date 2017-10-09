@@ -1,6 +1,4 @@
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Created by Valued Customer on 9/17/2016.
@@ -24,46 +22,54 @@ import java.util.Stack;
  The input is always valid. You may assume that evaluating the queries will result in no division by zero and there is no contradiction.
  */
 public class p399 {
-    public double[] calcEquation(String[][] equations, double[] values, String[][] query) {
-        double[] result = new double[query.length];
-        // filter unexpected words
-        Set<String> words = new HashSet<>();
-        for (String[] strs : equations) {
-            words.add(strs[0]);
-            words.add(strs[1]);
+    class Value {
+        String name;
+        boolean visited;
+        Map<Value, Double> map;
+        public Value(String name) {
+            this.name = name;
+            this.map = new HashMap<>();
+            this.visited = false;
         }
-        for (int i = 0; i < query.length; ++i) {
-            String[] keys = query[i];
-            if (!words.contains(keys[0]) || !words.contains(keys[1])) result[i] = -1.0d;
-            else {
-                Stack<Integer> stack = new Stack<>();
-                result[i] = helper(equations, values, keys, stack);
+    }
+    double ans = -1.0;
+    public double[] calcEquation(String[][] equations, double[] values, String[][] queries) {
+        Map<String, Value> map = new HashMap<>();
+        for (int i = 0; i < equations.length; i++) {
+            String[] equation = equations[i];
+            double quotient = values[i];
+            map.putIfAbsent(equation[0], new Value(equation[0]));
+            map.putIfAbsent(equation[1], new Value(equation[1]));
+            Value nom = map.get(equation[0]), denom = map.get(equation[1]);
+            nom.map.putIfAbsent(denom, quotient);
+            denom.map.putIfAbsent(nom, 1.0 / quotient);
+        }
+        double[] result = new double[queries.length];
+        for (int i = 0; i < queries.length; i++) {
+            String[] query = queries[i];
+            if (map.containsKey(query[0]) && map.containsKey(query[1])) {
+                dfs(map.get(query[0]), map.get(query[1]), 1.0);
+                result[i] = ans;
+                ans = -1.0;
+            } else {
+                result[i] = -1.0;
             }
         }
         return result;
     }
 
-    public double helper(String[][] equations, double[] values, String[] keys, Stack<Integer> stack) {
-        // look up equations directly
-        for (int i = 0; i < equations.length; ++i) {
-            if (equations[i][0].equals(keys[0]) && equations[i][1].equals(keys[1])) return values[i];
-            if (equations[i][0].equals(keys[1]) && equations[i][1].equals(keys[0])) return 1 / values[i];
+    private void dfs(Value value, Value target, double v) {
+        if (value == target) {
+            ans = v;
+            return;
         }
-        // lookup equations by other equations
-        for (int i = 0; i < equations.length; ++i) {
-            if (!stack.contains(i) && keys[0].equals(equations[i][0])) {
-                stack.push(i);
-                double temp = values[i] * helper(equations, values, new String[]{equations[i][1], keys[1]}, stack);
-                if (temp > 0) return temp;
-                else stack.pop();
-            }
-            if (!stack.contains(i) && keys[0].equals(equations[i][1])) {
-                stack.push(i);
-                double temp = helper(equations, values, new String[]{equations[i][0], keys[1]}, stack) / values[i];
-                if (temp > 0) return temp;
-                else stack.pop();
+        value.visited = true;
+        for (Value neighbor: value.map.keySet()) {
+            if (!neighbor.visited) {
+                double quotient = value.map.get(neighbor);
+                dfs(neighbor, target, v * quotient);
             }
         }
-        return -1.0d;
+        value.visited = false;
     }
 }

@@ -16,28 +16,22 @@ import java.util.HashMap;
 public class p003 {
     public int lengthOfLongestSubstring(String s) {
         if (s.length() == 0) return 0;
-        HashMap<Character, Integer> visitedMap = new HashMap<>();
-        int maxLen = 1;
-        int startInd = 0;
-        visitedMap.put(s.charAt(0),0);
-        for (int i = 1; i < s.length(); i++) {
-            System.out.println("i = "+i);
-            char c = s.charAt(i);
-            if (visitedMap.containsKey(c)) {
-                startInd = visitedMap.get(c) + 1;
-                visitedMap.remove(c);
+        int[] map = new int[128];
+        for (int i = 0; i < map.length; i++) map[i] = -1;
+        int max = 0;
+        for (int i = 0, j = 0; i < s.length(); i++) {
+            if (map[s.charAt(i)] >= 0) {
+                j = Math.max(j, map[s.charAt(i)]+1);
             }
-            System.out.println("startInd = "+startInd);
-            System.out.println("maxlen = " + maxLen);
-            if (maxLen < i - startInd + 1) maxLen = i - startInd + 1;
-            visitedMap.put(c, i);
+            map[s.charAt(i)] = i;
+            max = Math.max(max, i-j+1);
         }
-        return maxLen;
+        return max;
     }
 
     public static void main(String[] args) {
         p003 sol = new p003();
-        sol.lengthOfLongestSubstring("abba");
+        System.out.println(sol.lengthOfLongestSubstring("bbbbbb"));
     }
 }
 

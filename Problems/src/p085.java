@@ -22,6 +22,7 @@ import java.util.Stack;
  */
 public class p085 {
     public int maximalRectangle(char[][] matrix) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) return 0;
         int m = matrix.length;
         int n = matrix[0].length;
         int[] height = new int[n+1];
@@ -29,11 +30,13 @@ public class p085 {
 
         for (int row = 0; row < m; row++) {
             Stack<Integer> stack = new Stack<>();
-            for (int col = 0; col < n; col++) {
-                if (matrix[row][col] == '1')
-                    height[col] += 1;
-                else
-                    height[col] = 0;
+            for (int col = 0; col <= n; col++) {
+                if (col < n) {
+                    if (matrix[row][col] == '1')
+                        height[col] += 1;
+                    else
+                        height[col] = 0;
+                }
                 while (!stack.isEmpty() && height[col] < height[stack.peek()]) {
                     int top = stack.pop();
                     int area = height[top] * (stack.isEmpty() ? col : (col - stack.peek() - 1));

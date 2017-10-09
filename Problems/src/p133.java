@@ -1,7 +1,8 @@
+import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 /**
- * Created by mengwliu on 8/9/16.
+ * Created by mengwliu on 09/26/17.
  * 133. Clone Graph
  *  Clone an undirected graph. Each node in the graph contains a label and a list of its neighbors.
 
@@ -31,24 +32,22 @@ import java.util.*;
 public class p133 {
     public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
         if (node == null) return null;
-        Map<UndirectedGraphNode, UndirectedGraphNode> visited = new HashMap<>();
-        UndirectedGraphNode result = copy(node, visited);
-        return result;
+        UndirectedGraphNode copyHead = new UndirectedGraphNode(node.label);
+        dfs(new HashMap<>(), node, copyHead);
+        return copyHead;
     }
 
-    public UndirectedGraphNode copy(UndirectedGraphNode root, Map<UndirectedGraphNode, UndirectedGraphNode> visited) {
-        UndirectedGraphNode rootCopy = new UndirectedGraphNode(root.label);
-        visited.put(root, rootCopy);
-        List<UndirectedGraphNode> neighborCopy = new ArrayList<>();
-        for (UndirectedGraphNode n : root.neighbors) {
-            if (!visited.containsKey(n)) {
-                UndirectedGraphNode nCopy = copy(n, visited);
-                neighborCopy.add(nCopy);
+    private void dfs(Map<UndirectedGraphNode, UndirectedGraphNode> visited, UndirectedGraphNode node, UndirectedGraphNode copy) {
+
+        visited.put(node, copy);
+        for (UndirectedGraphNode neighbor : node.neighbors) {
+            if (!visited.containsKey(neighbor)) {
+                UndirectedGraphNode neighborCopy = new UndirectedGraphNode(neighbor.label);
+                dfs(visited, neighbor, neighborCopy);
+                copy.neighbors.add(neighborCopy);
             } else {
-                neighborCopy.add(visited.get(n));
+                copy.neighbors.add(visited.get(neighbor));
             }
         }
-        rootCopy.neighbors = neighborCopy;
-        return rootCopy;
     }
 }

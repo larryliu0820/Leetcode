@@ -1,7 +1,7 @@
 import java.util.Stack;
 
 /**
- * Created by Valued Customer on 8/19/2016.
+ * Created by Valued Customer on 10/08/2017.
  * 230. Kth Smallest Element in a BST
  * Given a binary search tree, write a function kthSmallest to find the kth smallest element in it.
 
@@ -16,21 +16,24 @@ import java.util.Stack;
  */
 public class p230 {
 
-    private Stack<TreeNode> stack = new Stack<>();
     public int kthSmallest(TreeNode root, int k) {
-        int num = 0;
+        Stack<TreeNode> stack = new Stack<>();
+        pushLeft(stack, root);
+        int i = 0;
         TreeNode curr = root;
-        pushAll(curr);
         while (!stack.isEmpty()) {
             curr = stack.pop();
-            num++;
-            if (num == k) break;
-            pushAll(curr.right);
+            i++;
+            if (k == i) break;
+            pushLeft(stack, curr.right);
         }
         return curr.val;
     }
 
-    private void pushAll(TreeNode root) {
-        for (; root != null; root = root.left) stack.push(root);
+    private void pushLeft(Stack<TreeNode> stack, TreeNode node) {
+        while (node != null) {
+            stack.push(node);
+            node = node.left;
+        }
     }
 }

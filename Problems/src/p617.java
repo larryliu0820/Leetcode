@@ -1,5 +1,5 @@
 /**
- * Created by Valued Customer on 7/6/2017.
+ * Created by Valued Customer on 10/06/2017.
  *
  * 617. Merge Two Binary Trees
  *
@@ -30,22 +30,12 @@
  */
 public class p617 {
     public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
-        TreeNode head, t1Left = null, t1Right = null, t2Left = null, t2Right = null;
-        int t1Val = 0, t2Val = 0;
         if (t1 == null && t2 == null) return null;
-        if (t1 != null) {
-            t1Left = t1.left;
-            t1Right = t1.right;
-            t1Val = t1.val;
-        }
-        if (t2 != null) {
-            t2Left = t2.left;
-            t2Right = t2.right;
-            t2Val = t2.val;
-        }
-        head = new TreeNode(t1Val + t2Val);
-        head.left = mergeTrees(t1Left, t2Left);
-        head.right = mergeTrees(t1Right, t2Right);
-        return head;
+        int firstVal = t1 == null ? 0: t1.val;
+        int secondVal = t2 == null ? 0: t2.val;
+        TreeNode merged = new TreeNode(firstVal + secondVal);
+        merged.left = mergeTrees(t1 == null? null: t1.left, t2 == null? null: t2.left);
+        merged.right = mergeTrees(t1 == null? null: t1.right, t2 == null? null: t2.right);
+        return merged;
     }
 }

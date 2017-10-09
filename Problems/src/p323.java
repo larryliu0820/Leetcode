@@ -1,5 +1,4 @@
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Valued Customer on 9/16/2016.
@@ -26,31 +25,39 @@ import java.util.Set;
 public class p323 {
     private int[] father;
     public int countComponents(int n, int[][] edges) {
-
-        Set<Integer> set = new HashSet<>();
         father = new int[n];
+        for (int i = 0; i < n; i++) father[i] = i;
+        for (int[] edge : edges) {
+            union(edge[0], edge[1]);
+        }
+        Set<Integer> res = new HashSet<>();
+        int last = -1;
         for (int i = 0; i < n; i++) {
-            father[i] = i;
+            int f = find(i);
+            if (f != last) {
+                res.add(f);
+                last = f;
+            }
         }
-        for (int i = 0; i < edges.length; i++) {
-            union(edges[i][0], edges[i][1]);
-        }
-
-        for (int i = 0; i < n; i++){
-            set.add(find(i));
-        }
-        return set.size();
+        return res.size();
     }
 
-    int find(int node) {
-        if (father[node] == node) {
-            return node;
+    private int find(int i) {
+        while (father[i] != i) {
+            father[i] = father[father[i]];
+            i = father[i];
         }
-        father[node] = find(father[node]);
-        return father[node];
+        return father[i];
     }
 
-    void union(int node1, int node2) {
-        father[find(node1)] = find(node2);
+    private void union(int i, int j) {
+        int f1 = find(i);
+        int f2 = find(j);
+        if (f1 != f2) father[f1] = f2;
+    }
+
+    public static void main(String[] args) {
+        p323 sol = new p323();
+        sol.countComponents(5, new int[][]{{0,1}, {0,4}, {1,4}, {2,3}});
     }
 }

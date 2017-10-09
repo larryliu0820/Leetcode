@@ -1,8 +1,10 @@
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
- * Created by Valued Customer on 9/14/2016.
+ * Created by Valued Customer on 10/08/2017.
  * 257. Binary Tree Paths
  * Given a binary tree, return all root-to-leaf paths.
 
@@ -19,23 +21,20 @@ import java.util.List;
  */
 public class p257 {
     public List<String> binaryTreePaths(TreeNode root) {
-        List<String> result = new LinkedList<>();
-        if (root == null) return result;
-        String path = "";
-        helper(root, result, path);
-        return result;
+        Set<String> res = new HashSet<>();
+        if (root != null) helper(res, "", root);
+        return new LinkedList<>(res);
     }
 
-    private void helper(TreeNode root, List<String> result, String path) {
-        path += root.val;
-        if (root.left == null && root.right == null) {
-            result.add(path);
+    private void helper(Set<String> res, String path, TreeNode node) {
+        if (path.length() > 0) path += "->";
+        path += node.val;
+        if (node.left == null && node.right == null) {
+            if (path.length() > 0 && !res.contains(path)) res.add(path);
+            return;
         }
-        path += "->";
-        if (root.left != null)
-            helper(root.left, result, path);
-        if (root.right != null)
-            helper(root.right, result, path);
+        if (node.left != null) helper(res, path, node.left);
+        if (node.right != null) helper(res, path, node.right);
     }
 
     public static void main(String[] args) {
