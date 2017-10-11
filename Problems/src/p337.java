@@ -10,35 +10,21 @@ import java.util.Map;
  *
  */
 public class p337 {
-    List<Map<TreeNode, Integer>> dp;
     public int rob(TreeNode root) {
-        dp = new ArrayList<>();
-        dp.add(new HashMap<>());
-        dp.add(new HashMap<>());
-        return robHelper2(root, 1);
+        int[] res = robSub(root);
+        return Math.max(res[0], res[1]);
     }
 
+    private int[] robSub(TreeNode root) {
+        if (root == null) return new int[2];
 
-    private int robHelper2(TreeNode root, int robThis) {
-        if (root == null) return 0;
-        if (!dp.get(robThis).containsKey(root)) {
-            int robNextCount = robHelper2(root.left, 1) + robHelper2(root.right, 1);
-            dp.get(0).put(root, robNextCount);
-            if (robThis == 1) {
-                int robThisCount = root.val + robHelper2(root.left, 0) + robHelper2(root.right, 0);
-                dp.get(1).put(root, Math.max(robNextCount, robThisCount));
-            }
-        }
-        return dp.get(robThis).get(root);
-    }
-    private int robHelper(TreeNode root, boolean robThis) {
-        if (root == null) return 0;
-        int count = robHelper(root.left, true) + robHelper(root.right, true);
-        if (robThis) {
-            return Math.max(count,
-                    root.val + robHelper(root.left, false) + robHelper(root.right, false));
-        } else {
-            return count;
-        }
+        int[] left = robSub(root.left);
+        int[] right = robSub(root.right);
+        int[] res = new int[2];
+
+        res[0] = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
+        res[1] = root.val + left[0] + right[0];
+
+        return res;
     }
 }
