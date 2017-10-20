@@ -1,9 +1,11 @@
 import javax.transaction.TransactionRequiredException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 /**
- * Created by Valued Customer on 8/7/2016.
+ * Created by Valued Customer on 10/12/17.
  * 113. Path Sum II
  * Given a binary tree and a sum, find all root-to-leaf paths where each path's sum equals the given sum.
 
@@ -24,30 +26,25 @@ import java.util.List;
  */
 public class p113 {
     public List<List<Integer>> pathSum(TreeNode root, int sum) {
-        List<List<Integer>> result = new ArrayList<>();
-        List<Integer> path = new ArrayList<>();
-        if(root == null) return result;
-        dfs(root, sum, path, result);
-        return result;
+        List<List<Integer>> res = new LinkedList<>();
+        helper(root, 0, sum, res, new Stack<>());
+        return res;
     }
 
-    public void dfs(TreeNode root, int sum, List<Integer> path, List<List<Integer>> result) {
+    private void helper(TreeNode root, int curr, int target, List<List<Integer>> res, Stack<Integer> path) {
         if (root == null) return;
-        path.add(root.val);
-        if (sum == root.val && root.left == null && root.right == null) {
-            List<Integer> copy = new ArrayList<>();
-            copy.addAll(path);
-            result.add(copy);
-            path.remove(path.size()-1);
-            return;
+        curr += root.val;
+        path.push(root.val);
+
+        if (root.left == null && root.right == null) {
+            if (curr == target) res.add(new LinkedList<>(path));
         }
-        if(root.left != null) {
-            dfs(root.left, sum - root.val, path, result);
-        }
-        if(root.right != null) {
-            dfs(root.right, sum - root.val, path, result);
-        }
-        path.remove(path.size()-1);
+
+        helper(root.left, curr, target, res, path);
+
+        helper(root.right, curr, target, res, path);
+
+        path.pop();
     }
 
     public static void main(String[] args) {

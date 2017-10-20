@@ -1,5 +1,8 @@
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Created by Valued Customer on 7/9/2017.
+ * Created by Valued Customer on 10/12/2017.
  *
  * 437. Path Sum III
  *
@@ -31,16 +34,22 @@
  */
 public class p437 {
     public int pathSum(TreeNode root, int sum) {
-        if (root == null) return 0;
-        int leftCount = pathSum(root.left, sum);
-        int rightCount = pathSum(root.left, sum);
-        return leftCount + rightCount + pathSumHelper(root, sum);
+        Map<Integer, Integer> preSum = new HashMap<>();
+        preSum.put(0, 1);
+        return pathSumHelper(root, 0, sum, preSum);
     }
 
-    private int pathSumHelper(TreeNode root, int sum) {
+    private int pathSumHelper(TreeNode root, int currSum, int target, Map<Integer, Integer> preSum) {
         if (root == null) return 0;
-        return (root.val == sum ? 1 : 0)
-                + pathSumHelper(root.left, sum - root.val) + pathSumHelper(root.right, sum - root.val);
+
+        currSum += root.val;
+        int res = preSum.getOrDefault(currSum - target, 0);
+
+        preSum.put(currSum, preSum.getOrDefault(currSum, 0) + 1);
+        res += pathSumHelper(root.left, currSum, target, preSum) + pathSumHelper(root.right, currSum, target, preSum);
+        preSum.put(currSum, preSum.get(currSum) - 1);
+
+        return res;
     }
 
 }
