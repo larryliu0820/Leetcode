@@ -19,18 +19,14 @@ public class p246 {
         map.put('1','1');
         map.put('0','0');
         if (num == null || num.length() == 0) return false;
-        int left, right = num.length() / 2;
-        if (num.length() % 2 == 0) {
-            left = num.length() / 2 - 1;
-        } else {
-            left = num.length() / 2;
-        }
+        int left = 0, right = num.length()-1;
 
-        while (left >= 0 && right < num.length()) {
+
+        while (left <= right) {
             if (!map.containsKey(num.charAt(left)) || map.get(num.charAt(left)) != num.charAt(right))
                 return false;
-            left--;
-            right++;
+            left++;
+            right--;
         }
         return true;
     }

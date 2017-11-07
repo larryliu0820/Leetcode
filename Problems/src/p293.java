@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,13 +23,12 @@ import java.util.List;
  */
 public class p293 {
     public List<String> generatePossibleNextMoves(String s) {
-        List<String> result = new LinkedList<>();
-        if (s == null || s.length() == 0) return result;
+        List<String> res = new ArrayList<>();
         for (int i = 0; i < s.length()-1; i++) {
-            if (s.startsWith("++",i)) {
-                result.add(s.substring(0,i) + "--" + s.substring(i+2));
+            if (s.substring(i).startsWith("++")) {
+                res.add(s.substring(0, i)+"--"+s.substring(i+2));
             }
         }
-        return result;
+        return res;
     }
 }

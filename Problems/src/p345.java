@@ -16,28 +16,22 @@ import java.util.*;
  */
 public class p345 {
     public String reverseVowels(String s) {
-        Stack<String> vowels = new Stack<>();
-        List<Integer> indices = new ArrayList<>();
-        if (s == null || s.length() == 0) return s;
-        Set<Character> v = new HashSet<>();
-        for (char c: "aeiouAEIOU".toCharArray())
-            v.add(c);
-        int forward = 0;
-        int backward = s.length()-1;
-        char[] sb = s.toCharArray();
-        while(forward < backward) {
-            if (v.contains(sb[forward]) && v.contains(sb[backward])) {
-                char tmp = sb[backward];
-                sb[backward] = sb[forward];
-                sb[forward] = tmp;
-                forward++;
-                backward--;
-            }
-            if (!v.contains(sb[forward])) forward++;
-            if (!v.contains(sb[backward])) backward--;
+        Set<Character> set = new HashSet<>();
+        for (char c : "aeiouAEIOU".toCharArray()) set.add(c);
+        char[] arr = s.toCharArray();
+        int lo = 0, hi = s.length()-1;
+        while (lo < hi) {
+            while (lo < hi && !set.contains(arr[lo])) lo++;
+            while (lo < hi && !set.contains(arr[hi])) hi--;
+            if (lo < hi) swap(arr, lo++, hi--);
         }
+        return String.valueOf(arr);
+    }
 
-        return String.valueOf(sb);
+    private void swap(char[] arr, int lo, int hi) {
+        char temp = arr[lo];
+        arr[lo] = arr[hi];
+        arr[hi] = temp;
     }
 
     public static void main(String[] args) {

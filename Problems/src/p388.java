@@ -41,18 +41,24 @@ import java.util.*;
  */
 public class p388 {
     public int lengthLongestPath(String input) {
-        String[] paths = input.split("\n");
-        int[] stack = new int[paths.length+1];
-        int maxLen = 0;
-        for(String s:paths){
-            int lev = s.lastIndexOf("\t")+1, curLen = stack[lev+1] = stack[lev]+s.length()-lev+1;
-            if(s.contains(".")) maxLen = Math.max(maxLen, curLen-1);
+        List<String> list = new ArrayList<>();
+        int count = 0;
+        String[] lines = input.split("\n");
+        for (String line: lines) {
+            int i = 0;
+            while (i < line.length() && line.substring(i).startsWith("\t")) i++;
+            list.add(i, line.substring(i));
+            if (line.contains(".")) {
+                int curr = 0;
+                for (int j = 0; j <= i; j++) curr += list.get(j).length()+1;
+                count = Math.max(count, curr-1);
+            }
         }
-        return maxLen;
+        return count;
     }
 
     public static void main(String[] args) {
         p388 sol = new p388();
-        System.out.println(sol.lengthLongestPath("dir\n\tsubdir1\n\tsubdir2\n\t\tfile.ext"));
+        System.out.println(sol.lengthLongestPath("dir\n\tsubdir1\n\t\tfile1.ext\n\t\tsubsubdir1\n\tsubdir2\n\t\tsubsubdir2\n\t\t\tfile2.ext"));
     }
 }

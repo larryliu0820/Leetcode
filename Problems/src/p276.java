@@ -13,16 +13,16 @@
 public class p276 {
 
     public int numWays(int n, int k){
-        if (n <= 1 || k <= 0) return n*k;
-        if (k == 1) return n > 2 ? 0 : 1;
+        if (k == 0) return 0;
+        if (n == 0) return 0;
+        int ways_i1 = k, ways_i2 = 0;
 
-        int[] ways = new int[n];
-        ways[0] = k;
-        ways[1] = k*k;
-        for(int i=2; i < n; i++){
-            ways[i] = (k-1)*ways[i-1] + (k-1)*ways[i-2];
+        for (int i = 2; i <= n; i++) {
+            int temp = ways_i1;
+            ways_i1 = ways_i1 * (k-1) + ways_i2 * (k-1);
+            ways_i2 = temp;
+
         }
-
-        return ways[n-1];
+        return ways_i1 + ways_i2;
     }
 }
