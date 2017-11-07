@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by Valued Customer on 8/21/2016.
@@ -15,27 +17,22 @@ import java.util.List;
  */
 public class p346 {
     /** Initialize your data structure here. */
-    int sum;
     int size;
-    int actualSize;
-    List<Integer> values;
+    double sum;
+    Queue<Integer> queue;
     public p346(int size) {
         this.size = size;
-        actualSize = 0;
-        sum = 0;
-        values = new ArrayList<>();
+        this.sum = 0;
+        this.queue = new LinkedList<>();
     }
 
     public double next(int val) {
-
-        sum += val;
-        values.add(val);
-        if (actualSize < size) {
-            actualSize++;
-        } else {
-            sum -= values.get(0);
-            values.remove(0);
+        if (queue.size() <= size) {
+            sum += val;
+            queue.offer(val);
         }
-        return (double)sum/actualSize;
+
+        while (queue.size() > size) sum -= queue.poll();
+        return sum / (size > queue.size() ? queue.size() : size);
     }
 }
